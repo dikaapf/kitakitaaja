@@ -105,13 +105,13 @@ urlpatterns = [
   path('error/500/', views.error_500, name="error_500"),
   path('logout/', views.logout_view, name="logout"),
 
-  # ===================== Data Kependudukan URLs =====================
-  # Data Kependudukan CRUD
-  path('datakependudukan/', datamas_views.datakependudukan_list, name='datakependudukan_list'),
-  path('datakependudukan/create/', datamas_views.datakependudukan_create, name='datakependudukan_create'),
-  path('datakependudukan/<int:pk>/', datamas_views.datakependudukan_detail, name='datakependudukan_detail'),
-  path('datakependudukan/<int:pk>/edit/', datamas_views.datakependudukan_update, name='datakependudukan_update'),
-  path('datakependudukan/<int:pk>/delete/', datamas_views.datakependudukan_delete, name='datakependudukan_delete'),
+  # ===================== Data Master URLs =====================
+  # Data Master CRUD
+  path('datamaster/', datamas_views.datakependudukan_list, name='datamaster_list'),
+  path('datamaster/create/', datamas_views.datakependudukan_create, name='datamaster_create'),
+  path('datamaster/<int:pk>/', datamas_views.datakependudukan_detail, name='datamaster_detail'),
+  path('datamaster/<int:pk>/edit/', datamas_views.datakependudukan_update, name='datamaster_update'),
+  path('datamaster/<int:pk>/delete/', datamas_views.datakependudukan_delete, name='datamaster_delete'),
   
   # AJAX URLs untuk dynamic dropdown
   path('ajax/get-desa/', datamas_views.get_desa_by_daerah, name='get_desa_by_daerah'),

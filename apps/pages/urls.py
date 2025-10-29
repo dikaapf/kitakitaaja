@@ -1,11 +1,13 @@
 from django.urls import path
 from apps.pages import views
 from django.contrib.auth import views as auth_views
+from django.views.generic import RedirectView
 
 
 urlpatterns = [
   # Dashboard
-  path('', views.default, name="index"),
+  path('', RedirectView.as_view(url='/accounts/login/basic-login/', permanent=False), name="index"),
+  path('dashboard/', views.default, name="dashboard"),
   path('automotive', views.automotive, name="automotive"),
   path('smart-home', views.smart_home, name="smart_home"),
   path('crm', views.crm, name="crm"),

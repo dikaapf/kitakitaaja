@@ -372,11 +372,11 @@ def logout_view(request):
   return redirect('/accounts/login/illustration-login/')
 
 
-# ===================== Data Kependudukan CRUD Views =====================
+# ===================== Data Master CRUD Views =====================
 
 @login_required
 def datakependudukan_list(request):
-    """View untuk menampilkan daftar data kependudukan dengan fitur pencarian dan pagination"""
+    """View untuk menampilkan daftar data master dengan fitur pencarian dan pagination"""
     search_query = request.GET.get('search', '')
     daerah_filter = request.GET.get('daerah', '')
     desa_filter = request.GET.get('desa', '')
@@ -418,7 +418,7 @@ def datakependudukan_list(request):
     
     context = {
         'parent': 'datamas',
-        'segment': 'datakependudukan_list',
+        'segment': 'datamaster_list',
         'page_obj': page_obj,
         'search_query': search_query,
         'daerah_filter': daerah_filter,
@@ -429,84 +429,84 @@ def datakependudukan_list(request):
         'kelompok_list': kelompok_list,
         'total_data': data_list.count(),
     }
-    return render(request, 'datamas/datakependudukan_list.html', context)
+    return render(request, 'datamas/datamaster_list.html', context)
 
 
 @login_required
 def datakependudukan_detail(request, pk):
-    """View untuk menampilkan detail data kependudukan"""
+    """View untuk menampilkan detail data master"""
     data = get_object_or_404(DataKependudukan, pk=pk)
     context = {
         'parent': 'datamas',
-        'segment': 'datakependudukan_detail',
+        'segment': 'datamaster_detail',
         'data': data,
     }
-    return render(request, 'datamas/datakependudukan_detail.html', context)
+    return render(request, 'datamas/datamaster_detail.html', context)
 
 
 @login_required
 def datakependudukan_create(request):
-    """View untuk membuat data kependudukan baru"""
+    """View untuk membuat data master baru"""
     if request.method == 'POST':
         form = DataKependudukanForm(request.POST, request.FILES)
         if form.is_valid():
             data = form.save(commit=False)
             data.created_by = request.user
             data.save()
-            messages.success(request, f'Data kependudukan {data.nama_lengkap} berhasil ditambahkan!')
-            return redirect('datakependudukan_detail', pk=data.pk)
+            messages.success(request, f'Data Master {data.nama_lengkap} berhasil ditambahkan!')
+            return redirect('datamaster_detail', pk=data.pk)
     else:
         form = DataKependudukanForm()
     
     context = {
         'parent': 'datamas',
-        'segment': 'datakependudukan_create',
+        'segment': 'datamaster_create',
         'form': form,
     }
-    return render(request, 'datamas/datakependudukan_form.html', context)
+    return render(request, 'datamas/datamaster_form.html', context)
 
 
 @login_required
 def datakependudukan_update(request, pk):
-    """View untuk mengupdate data kependudukan"""
+    """View untuk mengupdate data master"""
     data = get_object_or_404(DataKependudukan, pk=pk)
     
     if request.method == 'POST':
         form = DataKependudukanForm(request.POST, request.FILES, instance=data)
         if form.is_valid():
             form.save()
-            messages.success(request, f'Data kependudukan {data.nama_lengkap} berhasil diupdate!')
-            return redirect('datakependudukan_detail', pk=data.pk)
+            messages.success(request, f'Data Master {data.nama_lengkap} berhasil diupdate!')
+            return redirect('datamaster_detail', pk=data.pk)
     else:
         form = DataKependudukanForm(instance=data)
     
     context = {
         'parent': 'datamas',
-        'segment': 'datakependudukan_update',
+        'segment': 'datamaster_update',
         'form': form,
         'data': data,
         'is_update': True,
     }
-    return render(request, 'datamas/datakependudukan_form.html', context)
+    return render(request, 'datamas/datamaster_form.html', context)
 
 
 @login_required
 def datakependudukan_delete(request, pk):
-    """View untuk menghapus data kependudukan"""
+    """View untuk menghapus data master"""
     data = get_object_or_404(DataKependudukan, pk=pk)
     
     if request.method == 'POST':
         nama = data.nama_lengkap
         data.delete()
-        messages.success(request, f'Data kependudukan {nama} berhasil dihapus!')
-        return redirect('datakependudukan_list')
+        messages.success(request, f'Data Master {nama} berhasil dihapus!')
+        return redirect('datamaster_list')
     
     context = {
         'parent': 'datamas',
-        'segment': 'datakependudukan_delete',
+        'segment': 'datamaster_delete',
         'data': data,
     }
-    return render(request, 'datamas/datakependudukan_confirm_delete.html', context)
+    return render(request, 'datamas/datamaster_confirm_delete.html', context)
 
 
 # ===================== AJAX Views untuk Dynamic Dropdown =====================

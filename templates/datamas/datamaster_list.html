@@ -1,7 +1,7 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 
-{% block title %} Data Kependudukan {% endblock title %}
+{% block title %} Data Master {% endblock title %}
 
 {% block stylesheets %}
 <!-- DataTables CSS -->
@@ -18,8 +18,8 @@
       <div class="card mb-4">
         <div class="card-header pb-0">
           <div class="d-flex justify-content-between">
-            <h6>Data Kependudukan</h6>
-            <a href="{% url 'datakependudukan_create' %}" class="btn bg-gradient-primary btn-sm">
+            <h6>Data Master</h6>
+            <a href="{% url 'datamaster_create' %}" class="btn bg-gradient-primary btn-sm">
               <i class="fas fa-plus"></i> Tambah Data
             </a>
           </div>
@@ -79,7 +79,7 @@
               <button type="submit" class="btn bg-gradient-info btn-sm me-2">
                 <i class="fas fa-search"></i> Cari
               </button>
-              <a href="{% url 'datakependudukan_list' %}" class="btn btn-outline-secondary btn-sm">
+              <a href="{% url 'datamaster_list' %}" class="btn btn-outline-secondary btn-sm">
                 <i class="fas fa-redo"></i> Reset
               </a>
             </div>
@@ -98,7 +98,7 @@
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <div class="table-responsive p-0">
-            <table class="table align-items-center mb-0" id="datakependudukan-table">
+            <table class="table align-items-center mb-0" id="datamaster-table">
               <thead>
                 <tr>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
@@ -157,14 +157,14 @@
                         <i class="fa fa-ellipsis-v text-xs"></i>
                       </button>
                       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ data.id }}">
-                        <li><a class="dropdown-item" href="{% url 'datakependudukan_detail' data.pk %}">
+                        <li><a class="dropdown-item" href="{% url 'datamaster_detail' data.pk %}">
                           <i class="fas fa-eye me-2"></i>Detail
                         </a></li>
-                        <li><a class="dropdown-item" href="{% url 'datakependudukan_update' data.pk %}">
+                        <li><a class="dropdown-item" href="{% url 'datamaster_update' data.pk %}">
                           <i class="fas fa-edit me-2"></i>Edit
                         </a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="{% url 'datakependudukan_delete' data.pk %}">
+                        <li><a class="dropdown-item text-danger" href="{% url 'datamaster_delete' data.pk %}">
                           <i class="fas fa-trash me-2"></i>Hapus
                         </a></li>
                       </ul>

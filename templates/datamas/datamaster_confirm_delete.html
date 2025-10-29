@@ -1,7 +1,7 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 
-{% block title %}Konfirmasi Hapus Data Kependudukan{% endblock title %}
+{% block title %}Konfirmasi Hapus Data Master{% endblock title %}
 
 {% block content %}
 
@@ -14,7 +14,7 @@
             <i class="fas fa-exclamation-triangle fa-4x text-warning"></i>
           </div>
           <h4 class="text-danger">Konfirmasi Penghapusan Data</h4>
-          <p class="text-muted">Apakah Anda yakin ingin menghapus data kependudukan berikut?</p>
+          <p class="text-muted">Apakah Anda yakin ingin menghapus data master berikut?</p>
         </div>
         
         <div class="card-body">
@@ -81,7 +81,7 @@
                 <i class="fas fa-trash"></i> Ya, Hapus Data
               </button>
             </form>
-            <a href="{% url 'datakependudukan_detail' data.pk %}" class="btn btn-outline-secondary">
+            <a href="{% url 'datamaster_detail' data.pk %}" class="btn btn-outline-secondary">
               <i class="fas fa-times"></i> Batal
             </a>
           </div>
@@ -100,8 +100,8 @@
 
       <!-- Navigation Links -->
       <div class="text-center mt-3">
-        <a href="{% url 'datakependudukan_list' %}" class="text-muted">
-          <i class="fas fa-arrow-left me-1"></i> Kembali ke Daftar Data Kependudukan
+        <a href="{% url 'datamaster_list' %}" class="text-muted">
+          <i class="fas fa-arrow-left me-1"></i> Kembali ke Daftar Data Master
         </a>
       </div>
     </div>

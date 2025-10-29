@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-  {% if is_update %}Edit Data Kependudukan{% else %}Tambah Data Kependudukan{% endif %}
+  {% if is_update %}Edit Data Master{% else %}Tambah Data Master{% endif %}
 {% endblock title %}
 
 {% block content %}
@@ -13,8 +13,8 @@
       <div class="card mb-4">
         <div class="card-header pb-0">
           <div class="d-flex justify-content-between">
-            <h6>{% if is_update %}Edit Data Kependudukan{% else %}Tambah Data Kependudukan{% endif %}</h6>
-            <a href="{% url 'datakependudukan_list' %}" class="btn btn-outline-secondary btn-sm">
+            <h6>{% if is_update %}Edit Data Master{% else %}Tambah Data Master{% endif %}</h6>
+            <a href="{% url 'datamaster_list' %}" class="btn btn-outline-secondary btn-sm">
               <i class="fas fa-arrow-left"></i> Kembali
             </a>
           </div>
@@ -23,7 +23,7 @@
     </div>
   </div>
 
-  <form method="POST" enctype="multipart/form-data" id="datakependudukan-form">
+  <form method="POST" enctype="multipart/form-data" id="datamaster-form">
     {% csrf_token %}
     
     <!-- Data Identitas Dasar -->
@@ -408,7 +408,7 @@
               <i class="fas fa-save"></i> 
               {% if is_update %}Update Data{% else %}Simpan Data{% endif %}
             </button>
-            <a href="{% url 'datakependudukan_list' %}" class="btn btn-outline-secondary">
+            <a href="{% url 'datamaster_list' %}" class="btn btn-outline-secondary">
               <i class="fas fa-times"></i> Batal
             </a>
           </div>
@@ -475,7 +475,7 @@ $(document).ready(function() {
     });
 
     // Form validation
-    $('#datakependudukan-form').on('submit', function(e) {
+    $('#datamaster-form').on('submit', function(e) {
         var isValid = true;
         var requiredFields = ['#id_nik', '#id_nama_lengkap', '#id_jenis_kelamin', '#id_tempat_lahir', 
                              '#id_tanggal_lahir', '#id_daerah', '#id_desa', '#id_kelompok', 

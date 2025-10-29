@@ -85,18 +85,18 @@
             <div class="icon icon-sm shadow-sm border-radius-md bg-white text-center d-flex align-items-center justify-content-center  me-2">
               <i class="ni ni-single-02" aria-hidden="true"></i>
             </div>
-            <span class="nav-link-text ms-1">Data Kependudukan</span>
+            <span class="nav-link-text ms-1">Data Master</span>
           </a>
           <div class="collapse {% if 'datamas' in parent %}show{% endif %} " id="datamas-dropdown">
             <ul class="nav ms-4 ps-3">
-              <li class="nav-item {% if 'datakependudukan_list' in segment %}active{% endif %}">
-                <a class="nav-link {% if 'datakependudukan_list' in segment %}active{% endif %}" href="{% url 'datakependudukan_list' %}">
-                  <span class="sidenav-mini-icon"> DK </span>
+              <li class="nav-item {% if 'datamaster_list' in segment %}active{% endif %}">
+                <a class="nav-link {% if 'datamaster_list' in segment %}active{% endif %}" href="{% url 'datamaster_list' %}">
+                  <span class="sidenav-mini-icon"> DM </span>
                   <span class="sidenav-normal"> Daftar Data </span>
                 </a>
               </li>   
-              <li class="nav-item {% if 'datakependudukan_create' in segment %}active{% endif %}">
-                <a class="nav-link {% if 'datakependudukan_create' in segment %}active{% endif %}" href="{% url 'datakependudukan_create' %}">
+              <li class="nav-item {% if 'datamaster_create' in segment %}active{% endif %}">
+                <a class="nav-link {% if 'datamaster_create' in segment %}active{% endif %}" href="{% url 'datamaster_create' %}">
                   <span class="sidenav-mini-icon"> + </span>
                   <span class="sidenav-normal"> Tambah Data </span>
                 </a>
