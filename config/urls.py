@@ -32,13 +32,10 @@ urlpatterns = [
     path("", include("apps.dyn_api.urls")), 
     path('charts/', include('apps.charts.urls')),
     path('tasks/', include('apps.tasks.urls')),
-    path('', include('apps.file_manager.urls')),
     path("users/", include("apps.users.urls")),
     path('accounts/', include('allauth.urls')),
 
     re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}), 
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}), 
 
-    # Debug toolbar
-    path("__debug__/", include("debug_toolbar.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

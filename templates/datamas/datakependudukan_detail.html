@@ -1,0 +1,332 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %}Detail Data Kependudukan - {{ data.nama_lengkap }}{% endblock title %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+  <!-- Header with Action Buttons -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <div class="d-flex justify-content-between">
+            <h6>Detail Data Kependudukan</h6>
+            <div>
+              <a href="{% url 'datakependudukan_list' %}" class="btn btn-outline-secondary btn-sm me-2">
+                <i class="fas fa-arrow-left"></i> Kembali
+              </a>
+              <a href="{% url 'datakependudukan_update' data.pk %}" class="btn bg-gradient-info btn-sm me-2">
+                <i class="fas fa-edit"></i> Edit
+              </a>
+              <a href="{% url 'datakependudukan_delete' data.pk %}" class="btn bg-gradient-danger btn-sm">
+                <i class="fas fa-trash"></i> Hapus
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Overview -->
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="card h-100">
+        <div class="card-body text-center">
+          {% if data.foto %}
+            <img src="{{ data.foto.url }}" alt="Foto {{ data.nama_lengkap }}" 
+                 class="img-fluid border-radius-lg shadow-lg" style="max-width: 200px;">
+          {% else %}
+            <div class="bg-gradient-secondary border-radius-lg d-flex align-items-center justify-content-center" 
+                 style="height: 200px; width: 200px; margin: 0 auto;">
+              <i class="fas fa-user fa-4x text-white"></i>
+            </div>
+          {% endif %}
+          <h5 class="mt-3 mb-1">{{ data.nama_lengkap }}</h5>
+          <p class="text-muted mb-0">NIK: {{ data.nik }}</p>
+          <p class="text-sm">{{ data.get_jenis_kelamin_display }}, {{ data.umur }} tahun</p>
+          
+          <div class="row mt-3">
+            <div class="col-6">
+              <div class="info">
+                <span class="text-sm text-muted">Tempat, Tanggal Lahir</span>
+                <h6 class="text-sm">{{ data.tempat_lahir }}, {{ data.tanggal_lahir|date:"d M Y" }}</h6>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="info">
+                <span class="text-sm text-muted">Status Perkawinan</span>
+                <h6 class="text-sm">{{ data.get_status_perkawinan_display }}</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-8">
+      <!-- Data Identitas -->
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Data Identitas</h6>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="info">
+                <span class="text-sm text-muted">NIK</span>
+                <h6 class="text-sm">{{ data.nik }}</h6>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="info">
+                <span class="text-sm text-muted">Nama Lengkap</span>
+                <h6 class="text-sm">{{ data.nama_lengkap }}</h6>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <div class="info">
+                <span class="text-sm text-muted">Jenis Kelamin</span>
+                <h6 class="text-sm">{{ data.get_jenis_kelamin_display }}</h6>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="info">
+                <span class="text-sm text-muted">Tempat Lahir</span>
+                <h6 class="text-sm">{{ data.tempat_lahir }}</h6>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="info">
+                <span class="text-sm text-muted">Tanggal Lahir</span>
+                <h6 class="text-sm">{{ data.tanggal_lahir|date:"d M Y" }}</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Alamat -->
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Data Alamat</h6>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="info">
+                <span class="text-sm text-muted">Daerah</span>
+                <h6 class="text-sm">{{ data.daerah.nama_daerah }}</h6>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="info">
+                <span class="text-sm text-muted">Desa</span>
+                <h6 class="text-sm">{{ data.desa.nama_desa }}</h6>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="info">
+                <span class="text-sm text-muted">Kelompok</span>
+                <h6 class="text-sm">{{ data.kelompok.nama_kel }}</h6>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-8">
+              <div class="info">
+                <span class="text-sm text-muted">Alamat Lengkap</span>
+                <h6 class="text-sm">{{ data.alamat_lengkap }}</h6>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="info">
+                <span class="text-sm text-muted">RT</span>
+                <h6 class="text-sm">{{ data.rt }}</h6>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="info">
+                <span class="text-sm text-muted">RW</span>
+                <h6 class="text-sm">{{ data.rw }}</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Sosial dan Keluarga -->
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Data Sosial</h6>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="info mb-3">
+                <span class="text-sm text-muted">Agama</span>
+                <h6 class="text-sm">{{ data.get_agama_display }}</h6>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="info mb-3">
+                <span class="text-sm text-muted">Status Perkawinan</span>
+                <h6 class="text-sm">{{ data.get_status_perkawinan_display }}</h6>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="info mb-3">
+                <span class="text-sm text-muted">Pekerjaan</span>
+                <h6 class="text-sm">{{ data.get_pekerjaan_display }}</h6>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="info">
+                <span class="text-sm text-muted">Pendidikan Terakhir</span>
+                <h6 class="text-sm">{{ data.get_pendidikan_terakhir_display }}</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Data Keluarga</h6>
+        </div>
+        <div class="card-body">
+          <div class="info mb-3">
+            <span class="text-sm text-muted">Nama Ayah</span>
+            <h6 class="text-sm">{{ data.nama_ayah|default:"-" }}</h6>
+          </div>
+          <div class="info mb-3">
+            <span class="text-sm text-muted">Nama Ibu</span>
+            <h6 class="text-sm">{{ data.nama_ibu|default:"-" }}</h6>
+          </div>
+          <div class="info">
+            <span class="text-sm text-muted">Nama Pasangan</span>
+            <h6 class="text-sm">{{ data.nama_pasangan|default:"-" }}</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Kontak dan Keterangan -->
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Data Kontak</h6>
+        </div>
+        <div class="card-body">
+          <div class="info mb-3">
+            <span class="text-sm text-muted">No. Telepon</span>
+            <h6 class="text-sm">
+              {% if data.no_telepon %}
+                <a href="tel:{{ data.no_telepon }}" class="text-primary">{{ data.no_telepon }}</a>
+              {% else %}
+                -
+              {% endif %}
+            </h6>
+          </div>
+          <div class="info">
+            <span class="text-sm text-muted">Email</span>
+            <h6 class="text-sm">
+              {% if data.email %}
+                <a href="mailto:{{ data.email }}" class="text-primary">{{ data.email }}</a>
+              {% else %}
+                -
+              {% endif %}
+            </h6>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Keterangan</h6>
+        </div>
+        <div class="card-body">
+          <div class="info">
+            <p class="text-sm">{{ data.keterangan|default:"Tidak ada keterangan" }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Metadata -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Informasi Sistem</h6>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="info">
+                <span class="text-sm text-muted">Dibuat Pada</span>
+                <h6 class="text-sm">{{ data.created_at|date:"d M Y H:i" }}</h6>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="info">
+                <span class="text-sm text-muted">Diupdate Pada</span>
+                <h6 class="text-sm">{{ data.updated_at|date:"d M Y H:i" }}</h6>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="info">
+                <span class="text-sm text-muted">Dibuat Oleh</span>
+                <h6 class="text-sm">{{ data.created_by.username|default:"-" }}</h6>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="info">
+                <span class="text-sm text-muted">Umur</span>
+                <h6 class="text-sm">{{ data.umur }} tahun</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+$(document).ready(function() {
+    // Initialize tooltips
+    $('[data-bs-toggle="tooltip"]').tooltip();
+    
+    // Confirmation for delete button
+    $('.btn-danger').on('click', function(e) {
+        if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+{% endblock javascripts %}

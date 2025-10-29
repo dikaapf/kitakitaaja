@@ -1,5 +1,6 @@
 from django.urls import path
 from apps.pages import views
+from apps.datamas import views as datamas_views
 from django.contrib.auth import views as auth_views
 
 
@@ -103,4 +104,21 @@ urlpatterns = [
   path('error/404/', views.error_404, name="error_404"),
   path('error/500/', views.error_500, name="error_500"),
   path('logout/', views.logout_view, name="logout"),
+
+  # ===================== Data Kependudukan URLs =====================
+  # Data Kependudukan CRUD
+  path('datakependudukan/', datamas_views.datakependudukan_list, name='datakependudukan_list'),
+  path('datakependudukan/create/', datamas_views.datakependudukan_create, name='datakependudukan_create'),
+  path('datakependudukan/<int:pk>/', datamas_views.datakependudukan_detail, name='datakependudukan_detail'),
+  path('datakependudukan/<int:pk>/edit/', datamas_views.datakependudukan_update, name='datakependudukan_update'),
+  path('datakependudukan/<int:pk>/delete/', datamas_views.datakependudukan_delete, name='datakependudukan_delete'),
+  
+  # AJAX URLs untuk dynamic dropdown
+  path('ajax/get-desa/', datamas_views.get_desa_by_daerah, name='get_desa_by_daerah'),
+  path('ajax/get-kelompok/', datamas_views.get_kelompok_by_desa, name='get_kelompok_by_desa'),
+  
+  # Master Data URLs
+  path('master/daerah/', datamas_views.master_daerah, name='master_daerah'),
+  path('master/desa/', datamas_views.master_desa, name='master_desa'),
+  path('master/kelompok/', datamas_views.master_kelompok, name='master_kelompok'),
 ]

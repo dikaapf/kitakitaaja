@@ -1,0 +1,514 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %}
+  {% if is_update %}Edit Data Kependudukan{% else %}Tambah Data Kependudukan{% endif %}
+{% endblock title %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <div class="d-flex justify-content-between">
+            <h6>{% if is_update %}Edit Data Kependudukan{% else %}Tambah Data Kependudukan{% endif %}</h6>
+            <a href="{% url 'datakependudukan_list' %}" class="btn btn-outline-secondary btn-sm">
+              <i class="fas fa-arrow-left"></i> Kembali
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <form method="POST" enctype="multipart/form-data" id="datakependudukan-form">
+    {% csrf_token %}
+    
+    <!-- Data Identitas Dasar -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6>Data Identitas Dasar</h6>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="{{ form.nik.id_for_label }}" class="form-control-label">{{ form.nik.label }} <span class="text-danger">*</span></label>
+                  {{ form.nik }}
+                  {% if form.nik.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.nik.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="{{ form.nama_lengkap.id_for_label }}" class="form-control-label">{{ form.nama_lengkap.label }} <span class="text-danger">*</span></label>
+                  {{ form.nama_lengkap }}
+                  {% if form.nama_lengkap.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.nama_lengkap.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="{{ form.jenis_kelamin.id_for_label }}" class="form-control-label">{{ form.jenis_kelamin.label }} <span class="text-danger">*</span></label>
+                  {{ form.jenis_kelamin }}
+                  {% if form.jenis_kelamin.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.jenis_kelamin.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="{{ form.tempat_lahir.id_for_label }}" class="form-control-label">{{ form.tempat_lahir.label }} <span class="text-danger">*</span></label>
+                  {{ form.tempat_lahir }}
+                  {% if form.tempat_lahir.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.tempat_lahir.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="{{ form.tanggal_lahir.id_for_label }}" class="form-control-label">{{ form.tanggal_lahir.label }} <span class="text-danger">*</span></label>
+                  {{ form.tanggal_lahir }}
+                  {% if form.tanggal_lahir.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.tanggal_lahir.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Alamat -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6>Data Alamat</h6>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="{{ form.daerah.id_for_label }}" class="form-control-label">{{ form.daerah.label }} <span class="text-danger">*</span></label>
+                  {{ form.daerah }}
+                  {% if form.daerah.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.daerah.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="{{ form.desa.id_for_label }}" class="form-control-label">{{ form.desa.label }} <span class="text-danger">*</span></label>
+                  {{ form.desa }}
+                  {% if form.desa.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.desa.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="{{ form.kelompok.id_for_label }}" class="form-control-label">{{ form.kelompok.label }} <span class="text-danger">*</span></label>
+                  {{ form.kelompok }}
+                  {% if form.kelompok.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.kelompok.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="form-group">
+                  <label for="{{ form.alamat_lengkap.id_for_label }}" class="form-control-label">{{ form.alamat_lengkap.label }} <span class="text-danger">*</span></label>
+                  {{ form.alamat_lengkap }}
+                  {% if form.alamat_lengkap.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.alamat_lengkap.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="{{ form.rt.id_for_label }}" class="form-control-label">{{ form.rt.label }} <span class="text-danger">*</span></label>
+                  {{ form.rt }}
+                  {% if form.rt.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.rt.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="{{ form.rw.id_for_label }}" class="form-control-label">{{ form.rw.label }} <span class="text-danger">*</span></label>
+                  {{ form.rw }}
+                  {% if form.rw.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.rw.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Sosial -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6>Data Sosial</h6>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="{{ form.agama.id_for_label }}" class="form-control-label">{{ form.agama.label }} <span class="text-danger">*</span></label>
+                  {{ form.agama }}
+                  {% if form.agama.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.agama.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="{{ form.status_perkawinan.id_for_label }}" class="form-control-label">{{ form.status_perkawinan.label }} <span class="text-danger">*</span></label>
+                  {{ form.status_perkawinan }}
+                  {% if form.status_perkawinan.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.status_perkawinan.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="{{ form.pekerjaan.id_for_label }}" class="form-control-label">{{ form.pekerjaan.label }} <span class="text-danger">*</span></label>
+                  {{ form.pekerjaan }}
+                  {% if form.pekerjaan.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.pekerjaan.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="{{ form.pendidikan_terakhir.id_for_label }}" class="form-control-label">{{ form.pendidikan_terakhir.label }} <span class="text-danger">*</span></label>
+                  {{ form.pendidikan_terakhir }}
+                  {% if form.pendidikan_terakhir.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.pendidikan_terakhir.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Keluarga -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6>Data Keluarga</h6>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="{{ form.nama_ayah.id_for_label }}" class="form-control-label">{{ form.nama_ayah.label }}</label>
+                  {{ form.nama_ayah }}
+                  {% if form.nama_ayah.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.nama_ayah.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="{{ form.nama_ibu.id_for_label }}" class="form-control-label">{{ form.nama_ibu.label }}</label>
+                  {{ form.nama_ibu }}
+                  {% if form.nama_ibu.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.nama_ibu.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="{{ form.nama_pasangan.id_for_label }}" class="form-control-label">{{ form.nama_pasangan.label }}</label>
+                  {{ form.nama_pasangan }}
+                  {% if form.nama_pasangan.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.nama_pasangan.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Kontak dan Tambahan -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6>Data Kontak dan Tambahan</h6>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="{{ form.no_telepon.id_for_label }}" class="form-control-label">{{ form.no_telepon.label }}</label>
+                  {{ form.no_telepon }}
+                  {% if form.no_telepon.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.no_telepon.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="{{ form.email.id_for_label }}" class="form-control-label">{{ form.email.label }}</label>
+                  {{ form.email }}
+                  {% if form.email.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.email.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="{{ form.foto.id_for_label }}" class="form-control-label">{{ form.foto.label }}</label>
+                  {{ form.foto }}
+                  {% if form.foto.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.foto.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% if is_update and data.foto %}
+                    <div class="mt-2">
+                      <small class="text-muted">Foto saat ini:</small><br>
+                      <img src="{{ data.foto.url }}" alt="Foto" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="{{ form.keterangan.id_for_label }}" class="form-control-label">{{ form.keterangan.label }}</label>
+                  {{ form.keterangan }}
+                  {% if form.keterangan.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.keterangan.errors %}
+                        <small>{{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Buttons -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-body text-center">
+            <button type="submit" class="btn bg-gradient-primary">
+              <i class="fas fa-save"></i> 
+              {% if is_update %}Update Data{% else %}Simpan Data{% endif %}
+            </button>
+            <a href="{% url 'datakependudukan_list' %}" class="btn btn-outline-secondary">
+              <i class="fas fa-times"></i> Batal
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+$(document).ready(function() {
+    // Dynamic dropdown for Desa based on Daerah
+    $('#id_daerah').on('change', function() {
+        var daerahId = $(this).val();
+        var desaSelect = $('#id_desa');
+        var kelompokSelect = $('#id_kelompok');
+        
+        // Clear desa and kelompok
+        desaSelect.empty().append('<option value="">Pilih Desa</option>');
+        kelompokSelect.empty().append('<option value="">Pilih Kelompok</option>');
+        
+        if (daerahId) {
+            $.ajax({
+                url: '{% url "get_desa_by_daerah" %}',
+                data: {
+                    'daerah_id': daerahId
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $.each(data.desa_list, function(index, desa) {
+                        desaSelect.append('<option value="' + desa.id + '">' + desa.name + '</option>');
+                    });
+                }
+            });
+        }
+    });
+
+    // Dynamic dropdown for Kelompok based on Desa
+    $('#id_desa').on('change', function() {
+        var desaId = $(this).val();
+        var kelompokSelect = $('#id_kelompok');
+        
+        // Clear kelompok
+        kelompokSelect.empty().append('<option value="">Pilih Kelompok</option>');
+        
+        if (desaId) {
+            $.ajax({
+                url: '{% url "get_kelompok_by_desa" %}',
+                data: {
+                    'desa_id': desaId
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $.each(data.kelompok_list, function(index, kelompok) {
+                        kelompokSelect.append('<option value="' + kelompok.id + '">' + kelompok.name + '</option>');
+                    });
+                }
+            });
+        }
+    });
+
+    // Form validation
+    $('#datakependudukan-form').on('submit', function(e) {
+        var isValid = true;
+        var requiredFields = ['#id_nik', '#id_nama_lengkap', '#id_jenis_kelamin', '#id_tempat_lahir', 
+                             '#id_tanggal_lahir', '#id_daerah', '#id_desa', '#id_kelompok', 
+                             '#id_alamat_lengkap', '#id_rt', '#id_rw', '#id_agama', 
+                             '#id_status_perkawinan', '#id_pekerjaan', '#id_pendidikan_terakhir'];
+        
+        $.each(requiredFields, function(index, field) {
+            if (!$(field).val()) {
+                isValid = false;
+                $(field).addClass('is-invalid');
+            } else {
+                $(field).removeClass('is-invalid');
+            }
+        });
+        
+        if (!isValid) {
+            e.preventDefault();
+            alert('Mohon lengkapi semua field yang wajib diisi (bertanda *)');
+        }
+    });
+
+    // NIK validation
+    $('#id_nik').on('input', function() {
+        var nik = $(this).val();
+        if (nik.length > 0 && (nik.length !== 16 || !/^\d+$/.test(nik))) {
+            $(this).addClass('is-invalid');
+            $(this).next('.invalid-feedback').remove();
+            $(this).after('<div class="invalid-feedback">NIK harus terdiri dari 16 digit angka</div>');
+        } else {
+            $(this).removeClass('is-invalid');
+            $(this).next('.invalid-feedback').remove();
+        }
+    });
+});
+</script>
+{% endblock javascripts %}

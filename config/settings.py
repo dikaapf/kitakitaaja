@@ -14,7 +14,6 @@ from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 from django.contrib import messages
 from dotenv import load_dotenv
-from str2bool       import str2bool 
 import os, random, string
 
 load_dotenv()
@@ -31,7 +30,7 @@ if not SECRET_KEY:
     SECRET_KEY = ''.join(random.choice( string.ascii_lowercase  ) for i in range( 32 ))
 
 # Enable/Disable DEBUG Mode
-DEBUG = str2bool(os.environ.get('DEBUG'))
+DEBUG = True
 #print(' DEBUG -> ' + str(DEBUG) ) 
 
 ALLOWED_HOSTS = ['*']
@@ -57,10 +56,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'apps.pages',
+    'apps.datamas',
     'apps.dyn_dt',
     'apps.dyn_api',
     'apps.charts',
-    'apps.file_manager',
     'apps.tasks',
     'apps.users',
 
@@ -71,7 +70,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
 
     'django_celery_results',
-    'debug_toolbar',
     'django_quill',
 
     'rest_framework',
@@ -94,8 +92,7 @@ MIDDLEWARE = [
 
     # Required for allauth
     'allauth.account.middleware.AccountMiddleware',
-    # Required for debug toolbar
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+
 ]
 
 ROOT_URLCONF = 'config.urls'

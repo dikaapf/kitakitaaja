@@ -1,9 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordChangeView, PasswordResetConfirmView
-from apps.datamas.forms import RegistrationForm, LoginForm, UserPasswordResetForm, UserSetPasswordForm, UserPasswordChangeForm
+from apps.datamas.forms import RegistrationForm, LoginForm, UserPasswordResetForm, UserSetPasswordForm, UserPasswordChangeForm, DataKependudukanForm
 from django.contrib.auth import logout
-
+from django.contrib import messages
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from .models import DataKependudukan, Daerah, Desa, Kelompok
 
 # Dashboard
 def default(request):
@@ -366,3 +370,204 @@ def error_500(request, exception=None):
 def logout_view(request):
   logout(request)
   return redirect('/accounts/login/illustration-login/')
+
+
+# ===================== Data Kependudukan CRUD Views =====================
+
+@login_required
+def datakependudukan_list(request):
+    """View untuk menampilkan daftar data kependudukan dengan fitur pencarian dan pagination"""
+    search_query = request.GET.get('search', '')
+    daerah_filter = request.GET.get('daerah', '')
+    desa_filter = request.GET.get('desa', '')
+    kelompok_filter = request.GET.get('kelompok', '')
+    
+    # Query dasar
+    data_list = DataKependudukan.objects.all()
+    
+    # Filter berdasarkan pencarian
+    if search_query:
+        data_list = data_list.filter(
+            Q(nama_lengkap__icontains=search_query) |
+            Q(nik__icontains=search_query) |
+            Q(tempat_lahir__icontains=search_query) |
+            Q(alamat_lengkap__icontains=search_query)
+        )
+    
+    # Filter berdasarkan daerah
+    if daerah_filter:
+        data_list = data_list.filter(daerah_id=daerah_filter)
+    
+    # Filter berdasarkan desa
+    if desa_filter:
+        data_list = data_list.filter(desa_id=desa_filter)
+    
+    # Filter berdasarkan kelompok
+    if kelompok_filter:
+        data_list = data_list.filter(kelompok_id=kelompok_filter)
+    
+    # Pagination
+    paginator = Paginator(data_list, 20)  # 20 data per halaman
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Data untuk filter dropdown
+    daerah_list = Daerah.objects.all()
+    desa_list = Desa.objects.all()
+    kelompok_list = Kelompok.objects.all()
+    
+    context = {
+        'parent': 'datamas',
+        'segment': 'datakependudukan_list',
+        'page_obj': page_obj,
+        'search_query': search_query,
+        'daerah_filter': daerah_filter,
+        'desa_filter': desa_filter,
+        'kelompok_filter': kelompok_filter,
+        'daerah_list': daerah_list,
+        'desa_list': desa_list,
+        'kelompok_list': kelompok_list,
+        'total_data': data_list.count(),
+    }
+    return render(request, 'datamas/datakependudukan_list.html', context)
+
+
+@login_required
+def datakependudukan_detail(request, pk):
+    """View untuk menampilkan detail data kependudukan"""
+    data = get_object_or_404(DataKependudukan, pk=pk)
+    context = {
+        'parent': 'datamas',
+        'segment': 'datakependudukan_detail',
+        'data': data,
+    }
+    return render(request, 'datamas/datakependudukan_detail.html', context)
+
+
+@login_required
+def datakependudukan_create(request):
+    """View untuk membuat data kependudukan baru"""
+    if request.method == 'POST':
+        form = DataKependudukanForm(request.POST, request.FILES)
+        if form.is_valid():
+            data = form.save(commit=False)
+            data.created_by = request.user
+            data.save()
+            messages.success(request, f'Data kependudukan {data.nama_lengkap} berhasil ditambahkan!')
+            return redirect('datakependudukan_detail', pk=data.pk)
+    else:
+        form = DataKependudukanForm()
+    
+    context = {
+        'parent': 'datamas',
+        'segment': 'datakependudukan_create',
+        'form': form,
+    }
+    return render(request, 'datamas/datakependudukan_form.html', context)
+
+
+@login_required
+def datakependudukan_update(request, pk):
+    """View untuk mengupdate data kependudukan"""
+    data = get_object_or_404(DataKependudukan, pk=pk)
+    
+    if request.method == 'POST':
+        form = DataKependudukanForm(request.POST, request.FILES, instance=data)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Data kependudukan {data.nama_lengkap} berhasil diupdate!')
+            return redirect('datakependudukan_detail', pk=data.pk)
+    else:
+        form = DataKependudukanForm(instance=data)
+    
+    context = {
+        'parent': 'datamas',
+        'segment': 'datakependudukan_update',
+        'form': form,
+        'data': data,
+        'is_update': True,
+    }
+    return render(request, 'datamas/datakependudukan_form.html', context)
+
+
+@login_required
+def datakependudukan_delete(request, pk):
+    """View untuk menghapus data kependudukan"""
+    data = get_object_or_404(DataKependudukan, pk=pk)
+    
+    if request.method == 'POST':
+        nama = data.nama_lengkap
+        data.delete()
+        messages.success(request, f'Data kependudukan {nama} berhasil dihapus!')
+        return redirect('datakependudukan_list')
+    
+    context = {
+        'parent': 'datamas',
+        'segment': 'datakependudukan_delete',
+        'data': data,
+    }
+    return render(request, 'datamas/datakependudukan_confirm_delete.html', context)
+
+
+# ===================== AJAX Views untuk Dynamic Dropdown =====================
+
+def get_desa_by_daerah(request):
+    """AJAX view untuk mendapatkan desa berdasarkan daerah"""
+    daerah_id = request.GET.get('daerah_id')
+    desa_list = []
+    
+    if daerah_id:
+        desa_queryset = Desa.objects.filter(daerah_id=daerah_id)
+        desa_list = [{'id': desa.id_desa, 'name': desa.nama_desa} for desa in desa_queryset]
+    
+    return JsonResponse({'desa_list': desa_list})
+
+
+def get_kelompok_by_desa(request):
+    """AJAX view untuk mendapatkan kelompok berdasarkan desa"""
+    desa_id = request.GET.get('desa_id')
+    kelompok_list = []
+    
+    if desa_id:
+        kelompok_queryset = Kelompok.objects.filter(desa_id=desa_id)
+        kelompok_list = [{'id': kelompok.id_kel, 'name': kelompok.nama_kel} for kelompok in kelompok_queryset]
+    
+    return JsonResponse({'kelompok_list': kelompok_list})
+
+
+# ===================== Data Master Views =====================
+
+@login_required
+def master_daerah(request):
+    """View untuk mengelola master data daerah"""
+    daerah_list = Daerah.objects.all()
+    context = {
+        'parent': 'datamas',
+        'segment': 'master_daerah',
+        'daerah_list': daerah_list,
+    }
+    return render(request, 'datamas/master_daerah.html', context)
+
+
+@login_required
+def master_desa(request):
+    """View untuk mengelola master data desa"""
+    desa_list = Desa.objects.all()
+    context = {
+        'parent': 'datamas',
+        'segment': 'master_desa',
+        'desa_list': desa_list,
+    }
+    return render(request, 'datamas/master_desa.html', context)
+
+
+@login_required
+def master_kelompok(request):
+    """View untuk mengelola master data kelompok"""
+    kelompok_list = Kelompok.objects.all()
+    context = {
+        'parent': 'datamas',
+        'segment': 'master_kelompok',
+        'kelompok_list': kelompok_list,
+    }
+    return render(request, 'datamas/master_kelompok.html', context)

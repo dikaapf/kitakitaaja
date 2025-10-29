@@ -1,0 +1,256 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %} Data Kependudukan {% endblock title %}
+
+{% block stylesheets %}
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css">
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+  
+  <!-- Header with Action Buttons -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <div class="d-flex justify-content-between">
+            <h6>Data Kependudukan</h6>
+            <a href="{% url 'datakependudukan_create' %}" class="btn bg-gradient-primary btn-sm">
+              <i class="fas fa-plus"></i> Tambah Data
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search and Filter Section -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-body">
+          <form method="GET" class="row g-3">
+            <div class="col-md-3">
+              <label for="search" class="form-label">Pencarian</label>
+              <input type="text" class="form-control" id="search" name="search" 
+                     value="{{ search_query }}" placeholder="Cari nama, NIK, tempat lahir...">
+            </div>
+            <div class="col-md-2">
+              <label for="daerah" class="form-label">Daerah</label>
+              <select class="form-select" id="daerah" name="daerah">
+                <option value="">Semua Daerah</option>
+                {% for daerah in daerah_list %}
+                  <option value="{{ daerah.id_daerah }}" 
+                          {% if daerah_filter == daerah.id_daerah|stringformat:"s" %}selected{% endif %}>
+                    {{ daerah.nama_daerah }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label for="desa" class="form-label">Desa</label>
+              <select class="form-select" id="desa" name="desa">
+                <option value="">Semua Desa</option>
+                {% for desa in desa_list %}
+                  <option value="{{ desa.id_desa }}" 
+                          {% if desa_filter == desa.id_desa|stringformat:"s" %}selected{% endif %}>
+                    {{ desa.nama_desa }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label for="kelompok" class="form-label">Kelompok</label>
+              <select class="form-select" id="kelompok" name="kelompok">
+                <option value="">Semua Kelompok</option>
+                {% for kelompok in kelompok_list %}
+                  <option value="{{ kelompok.id_kel }}" 
+                          {% if kelompok_filter == kelompok.id_kel|stringformat:"s" %}selected{% endif %}>
+                    {{ kelompok.nama_kel }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+              <button type="submit" class="btn bg-gradient-info btn-sm me-2">
+                <i class="fas fa-search"></i> Cari
+              </button>
+              <a href="{% url 'datakependudukan_list' %}" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-redo"></i> Reset
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Daftar Data ({{ total_data }} data)</h6>
+        </div>
+        <div class="card-body px-0 pt-0 pb-2">
+          <div class="table-responsive p-0">
+            <table class="table align-items-center mb-0" id="datakependudukan-table">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">NIK</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Lengkap</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis Kelamin</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Umur</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Daerah</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Desa</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kelompok</th>
+                  <th class="text-secondary opacity-7">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for data in page_obj %}
+                <tr>
+                  <td class="align-middle text-center text-sm">
+                    <span class="text-xs font-weight-bold">{{ forloop.counter0|add:page_obj.start_index }}</span>
+                  </td>
+                  <td class="align-middle text-sm">
+                    <span class="text-xs font-weight-bold">{{ data.nik }}</span>
+                  </td>
+                  <td class="align-middle">
+                    <div class="d-flex px-2 py-1">
+                      {% if data.foto %}
+                        <div>
+                          <img src="{{ data.foto.url }}" class="avatar avatar-sm me-3" alt="foto">
+                        </div>
+                      {% endif %}
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">{{ data.nama_lengkap }}</h6>
+                        <p class="text-xs text-secondary mb-0">{{ data.tempat_lahir }}, {{ data.tanggal_lahir|date:"d M Y" }}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    <span class="badge badge-sm {% if data.jenis_kelamin == 'L' %}bg-gradient-primary{% else %}bg-gradient-info{% endif %}">
+                      {{ data.get_jenis_kelamin_display }}
+                    </span>
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    <span class="text-xs font-weight-bold">{{ data.umur }} tahun</span>
+                  </td>
+                  <td class="align-middle text-sm">
+                    <span class="text-xs font-weight-bold">{{ data.daerah.nama_daerah }}</span>
+                  </td>
+                  <td class="align-middle text-sm">
+                    <span class="text-xs font-weight-bold">{{ data.desa.nama_desa }}</span>
+                  </td>
+                  <td class="align-middle text-sm">
+                    <span class="text-xs font-weight-bold">{{ data.kelompok.nama_kel }}</span>
+                  </td>
+                  <td class="align-middle">
+                    <div class="dropdown">
+                      <button class="btn btn-link text-secondary mb-0" type="button" id="dropdownMenuButton{{ data.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-ellipsis-v text-xs"></i>
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ data.id }}">
+                        <li><a class="dropdown-item" href="{% url 'datakependudukan_detail' data.pk %}">
+                          <i class="fas fa-eye me-2"></i>Detail
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'datakependudukan_update' data.pk %}">
+                          <i class="fas fa-edit me-2"></i>Edit
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="{% url 'datakependudukan_delete' data.pk %}">
+                          <i class="fas fa-trash me-2"></i>Hapus
+                        </a></li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="9" class="text-center py-4">
+                    <div class="alert alert-info" role="alert">
+                      <i class="fas fa-info-circle me-2"></i>
+                      Tidak ada data kependudukan yang ditemukan.
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  {% if page_obj.has_other_pages %}
+  <div class="row">
+    <div class="col-12">
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if daerah_filter %}&daerah={{ daerah_filter }}{% endif %}{% if desa_filter %}&desa={{ desa_filter }}{% endif %}{% if kelompok_filter %}&kelompok={{ kelompok_filter }}{% endif %}">
+                <span aria-hidden="true">&laquo;&laquo;</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if daerah_filter %}&daerah={{ daerah_filter }}{% endif %}{% if desa_filter %}&desa={{ desa_filter }}{% endif %}{% if kelompok_filter %}&kelompok={{ kelompok_filter }}{% endif %}">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+          {% endif %}
+
+          {% for page_num in page_obj.paginator.page_range %}
+            {% if page_num == page_obj.number %}
+              <li class="page-item active">
+                <span class="page-link">{{ page_num }}</span>
+              </li>
+            {% elif page_num > page_obj.number|add:'-3' and page_num < page_obj.number|add:'3' %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if daerah_filter %}&daerah={{ daerah_filter }}{% endif %}{% if desa_filter %}&desa={{ desa_filter }}{% endif %}{% if kelompok_filter %}&kelompok={{ kelompok_filter }}{% endif %}">{{ page_num }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if daerah_filter %}&daerah={{ daerah_filter }}{% endif %}{% if desa_filter %}&desa={{ desa_filter }}{% endif %}{% if kelompok_filter %}&kelompok={{ kelompok_filter }}{% endif %}">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if daerah_filter %}&daerah={{ daerah_filter }}{% endif %}{% if desa_filter %}&desa={{ desa_filter }}{% endif %}{% if kelompok_filter %}&kelompok={{ kelompok_filter }}{% endif %}">
+                <span aria-hidden="true">&raquo;&raquo;</span>
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    // Initialize tooltips
+    $('[data-bs-toggle="tooltip"]').tooltip();
+});
+</script>
+{% endblock javascripts %}
