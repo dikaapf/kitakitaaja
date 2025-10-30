@@ -84,7 +84,7 @@ class DataKependudukanForm(forms.ModelForm):
         widgets = {
             'nik': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Masukkan NIK (16 digit)',
+                'placeholder': 'Masukkan ID_data (16 digit)',
                 'maxlength': '16'
             }),
             'nama_lengkap': forms.TextInput(attrs={
@@ -190,8 +190,8 @@ class DataKependudukanForm(forms.ModelForm):
             
         # Add validation messages
         self.fields['nik'].error_messages = {
-            'required': 'NIK wajib diisi',
-            'unique': 'NIK sudah terdaftar dalam sistem'
+            'required': 'ID_data wajib diisi',
+            'unique': 'ID_data sudah terdaftar dalam sistem'
         }
         self.fields['nama_lengkap'].error_messages = {
             'required': 'Nama lengkap wajib diisi'
@@ -202,8 +202,8 @@ class DataKependudukanForm(forms.ModelForm):
         if nik:
             # Validasi panjang NIK
             if len(nik) != 16:
-                raise forms.ValidationError('NIK harus terdiri dari 16 digit')
+                raise forms.ValidationError('ID_data harus terdiri dari 16 digit')
             # Validasi hanya angka
             if not nik.isdigit():
-                raise forms.ValidationError('NIK hanya boleh berisi angka')
+                raise forms.ValidationError('ID_data hanya boleh berisi angka')
         return nik

@@ -37,7 +37,7 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="{{ form.nik.id_for_label }}" class="form-control-label">{{ form.nik.label }} <span class="text-danger">*</span></label>
+                  <label for="{{ form.nik.id_for_label }}" class="form-control-label">ID_data <span class="text-danger">*</span></label>
                   {{ form.nik }}
                   {% if form.nik.errors %}
                     <div class="text-danger mt-1">
@@ -70,32 +70,6 @@
                   {% if form.jenis_kelamin.errors %}
                     <div class="text-danger mt-1">
                       {% for error in form.jenis_kelamin.errors %}
-                        <small>{{ error }}</small>
-                      {% endfor %}
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="{{ form.tempat_lahir.id_for_label }}" class="form-control-label">{{ form.tempat_lahir.label }} <span class="text-danger">*</span></label>
-                  {{ form.tempat_lahir }}
-                  {% if form.tempat_lahir.errors %}
-                    <div class="text-danger mt-1">
-                      {% for error in form.tempat_lahir.errors %}
-                        <small>{{ error }}</small>
-                      {% endfor %}
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="{{ form.tanggal_lahir.id_for_label }}" class="form-control-label">{{ form.tanggal_lahir.label }} <span class="text-danger">*</span></label>
-                  {{ form.tanggal_lahir }}
-                  {% if form.tanggal_lahir.errors %}
-                    <div class="text-danger mt-1">
-                      {% for error in form.tanggal_lahir.errors %}
                         <small>{{ error }}</small>
                       {% endfor %}
                     </div>
@@ -157,137 +131,13 @@
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-8">
-                <div class="form-group">
-                  <label for="{{ form.alamat_lengkap.id_for_label }}" class="form-control-label">{{ form.alamat_lengkap.label }}</label>
-                  {{ form.alamat_lengkap }}
-                  {% if form.alamat_lengkap.errors %}
-                    <div class="text-danger mt-1">
-                      {% for error in form.alamat_lengkap.errors %}
-                        <small>{{ error }}</small>
-                      {% endfor %}
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
-              <div class="col-md-2">
-              </div>
-              <div class="col-md-2">
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Data Sosial -->
-    <div class="row">
-      <div class="col-12">
-        <div class="card mb-4">
-          <div class="card-header pb-0">
-            <h6>Data Sosial</h6>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="{{ form.status_perkawinan.id_for_label }}" class="form-control-label">{{ form.status_perkawinan.label }} <span class="text-danger">*</span></label>
-                  {{ form.status_perkawinan }}
-                  {% if form.status_perkawinan.errors %}
-                    <div class="text-danger mt-1">
-                      {% for error in form.status_perkawinan.errors %}
-                        <small>{{ error }}</small>
-                      {% endfor %}
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="{{ form.pekerjaan.id_for_label }}" class="form-control-label">{{ form.pekerjaan.label }} <span class="text-danger">*</span></label>
-                  {{ form.pekerjaan }}
-                  {% if form.pekerjaan.errors %}
-                    <div class="text-danger mt-1">
-                      {% for error in form.pekerjaan.errors %}
-                        <small>{{ error }}</small>
-                      {% endfor %}
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="{{ form.pendidikan_terakhir.id_for_label }}" class="form-control-label">{{ form.pendidikan_terakhir.label }} <span class="text-danger">*</span></label>
-                  {{ form.pendidikan_terakhir }}
-                  {% if form.pendidikan_terakhir.errors %}
-                    <div class="text-danger mt-1">
-                      {% for error in form.pendidikan_terakhir.errors %}
-                        <small>{{ error }}</small>
-                      {% endfor %}
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Data Keluarga -->
-    <div class="row">
-      <div class="col-12">
-        <div class="card mb-4">
-          <div class="card-header pb-0">
-            <h6>Data Keluarga</h6>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="{{ form.nama_ayah.id_for_label }}" class="form-control-label">{{ form.nama_ayah.label }}</label>
-                  {{ form.nama_ayah }}
-                  {% if form.nama_ayah.errors %}
-                    <div class="text-danger mt-1">
-                      {% for error in form.nama_ayah.errors %}
-                        <small>{{ error }}</small>
-                      {% endfor %}
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="{{ form.nama_ibu.id_for_label }}" class="form-control-label">{{ form.nama_ibu.label }}</label>
-                  {{ form.nama_ibu }}
-                  {% if form.nama_ibu.errors %}
-                    <div class="text-danger mt-1">
-                      {% for error in form.nama_ibu.errors %}
-                        <small>{{ error }}</small>
-                      {% endfor %}
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="{{ form.nama_pasangan.id_for_label }}" class="form-control-label">{{ form.nama_pasangan.label }}</label>
-                  {{ form.nama_pasangan }}
-                  {% if form.nama_pasangan.errors %}
-                    <div class="text-danger mt-1">
-                      {% for error in form.nama_pasangan.errors %}
-                        <small>{{ error }}</small>
-                      {% endfor %}
-                    </div>
-                  {% endif %}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Data Kontak dan Tambahan -->
     <div class="row">
@@ -468,7 +318,7 @@ $(document).ready(function() {
         if (nik.length > 0 && (nik.length !== 16 || !/^\d+$/.test(nik))) {
             $(this).addClass('is-invalid');
             $(this).next('.invalid-feedback').remove();
-            $(this).after('<div class="invalid-feedback">NIK harus terdiri dari 16 digit angka</div>');
+            $(this).after('<div class="invalid-feedback">ID_data harus terdiri dari 16 digit angka</div>');
         } else {
             $(this).removeClass('is-invalid');
             $(this).next('.invalid-feedback').remove();

@@ -192,7 +192,7 @@ PEKERJAAN_CHOICES = (
 
 class DataKependudukan(models.Model):
     # Data Identitas Dasar
-    nik = models.CharField(max_length=16, unique=True, verbose_name="NIK")
+    nik = models.CharField(max_length=16, unique=True, verbose_name="ID_data")
     nama_lengkap = models.CharField(max_length=255, verbose_name="Nama Lengkap")
     jenis_kelamin = models.CharField(max_length=1, choices=GENDER_CHOICES, verbose_name="Jenis Kelamin")
     tempat_lahir = models.CharField(max_length=100, verbose_name="Tempat Lahir")

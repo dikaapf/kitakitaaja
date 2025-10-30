@@ -37,7 +37,7 @@
             <div class="col-md-3">
               <label for="search" class="form-label">Pencarian</label>
               <input type="text" class="form-control" id="search" name="search" 
-                     value="{{ search_query }}" placeholder="Cari nama, NIK, tempat lahir...">
+                     value="{{ search_query }}" placeholder="Cari nama atau Nomor HP...">
             </div>
             <div class="col-md-2">
               <label for="daerah" class="form-label">Daerah</label>
@@ -102,10 +102,9 @@
               <thead>
                 <tr>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">NIK</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">id_data</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Lengkap</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis Kelamin</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Umur</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nomor HP</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Daerah</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Desa</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kelompok</th>
@@ -119,7 +118,7 @@
                     <span class="text-xs font-weight-bold">{{ forloop.counter0|add:page_obj.start_index }}</span>
                   </td>
                   <td class="align-middle text-sm">
-                    <span class="text-xs font-weight-bold">{{ data.nik }}</span>
+                    <span class="text-xs font-weight-bold">{{ data.id }}</span>
                   </td>
                   <td class="align-middle">
                     <div class="d-flex px-2 py-1">
@@ -135,12 +134,7 @@
                     </div>
                   </td>
                   <td class="align-middle text-center text-sm">
-                    <span class="badge badge-sm {% if data.jenis_kelamin == 'L' %}bg-gradient-primary{% else %}bg-gradient-info{% endif %}">
-                      {{ data.get_jenis_kelamin_display }}
-                    </span>
-                  </td>
-                  <td class="align-middle text-center text-sm">
-                    <span class="text-xs font-weight-bold">{{ data.umur }} tahun</span>
+                    <span class="text-xs font-weight-bold">{{ data.no_telepon|default:"-" }}</span>
                   </td>
                   <td class="align-middle text-sm">
                     <span class="text-xs font-weight-bold">{{ data.daerah.nama_daerah }}</span>
