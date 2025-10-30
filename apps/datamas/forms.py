@@ -176,14 +176,17 @@ class DataKependudukanForm(forms.ModelForm):
         self.fields['desa'].empty_label = "Pilih Desa"
         self.fields['kelompok'].empty_label = "Pilih Kelompok"
         
-        # Set required fields
+        # Set required fields (alamat_lengkap tidak wajib)
         required_fields = ['nik', 'nama_lengkap', 'jenis_kelamin', 'tempat_lahir', 
-                          'tanggal_lahir', 'daerah', 'desa', 'kelompok', 
-                          'alamat_lengkap', 'rt', 'rw', 'agama', 'status_perkawinan', 
+                          'tanggal_lahir', 'daerah', 'desa', 'kelompok',
+                          'rt', 'rw', 'agama', 'status_perkawinan', 
                           'pekerjaan', 'pendidikan_terakhir']
         
         for field_name in required_fields:
             self.fields[field_name].required = True
+        
+        # Khusus alamat_lengkap tidak wajib
+        self.fields['alamat_lengkap'].required = False
             
         # Add validation messages
         self.fields['nik'].error_messages = {

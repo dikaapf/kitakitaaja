@@ -8,6 +8,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import DataKependudukan, Daerah, Desa, Kelompok
+from django import forms
 
 # Dashboard
 def default(request):
@@ -449,15 +450,53 @@ def datakependudukan_create(request):
     """View untuk membuat data master baru"""
     if request.method == 'POST':
         form = DataKependudukanForm(request.POST, request.FILES)
+        # Sembunyikan RT, RW, dan Agama tanpa ubah template
+        for fname in ['rt', 'rw', 'agama']:
+            if fname in form.fields:
+                form.fields[fname].required = False
+        if 'rt' in form.fields:
+            form.fields['rt'].widget = forms.HiddenInput()
+            form.fields['rt'].label = ''
+            form.fields['rt'].initial = '000'
+        if 'rw' in form.fields:
+            form.fields['rw'].widget = forms.HiddenInput()
+            form.fields['rw'].label = ''
+            form.fields['rw'].initial = '000'
+        if 'agama' in form.fields:
+            form.fields['agama'].widget = forms.HiddenInput()
+            form.fields['agama'].label = ''
+            form.fields['agama'].initial = 'lainnya'
+
         if form.is_valid():
             data = form.save(commit=False)
+            # Pastikan default jika tidak ada input dari form
+            if not getattr(data, 'agama', None):
+                data.agama = 'lainnya'
+            data.rt = data.rt or '000'
+            data.rw = data.rw or '000'
             data.created_by = request.user
             data.save()
             messages.success(request, f'Data Master {data.nama_lengkap} berhasil ditambahkan!')
             return redirect('datamaster_detail', pk=data.pk)
     else:
         form = DataKependudukanForm()
-    
+        # Sembunyikan RT, RW, dan Agama tanpa ubah template
+        for fname in ['rt', 'rw', 'agama']:
+            if fname in form.fields:
+                form.fields[fname].required = False
+        if 'rt' in form.fields:
+            form.fields['rt'].widget = forms.HiddenInput()
+            form.fields['rt'].label = ''
+            form.fields['rt'].initial = '000'
+        if 'rw' in form.fields:
+            form.fields['rw'].widget = forms.HiddenInput()
+            form.fields['rw'].label = ''
+            form.fields['rw'].initial = '000'
+        if 'agama' in form.fields:
+            form.fields['agama'].widget = forms.HiddenInput()
+            form.fields['agama'].label = ''
+            form.fields['agama'].initial = 'lainnya'
+
     context = {
         'parent': 'datamas',
         'segment': 'datamaster_create',
