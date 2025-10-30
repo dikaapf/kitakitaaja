@@ -19,11 +19,66 @@
         <div class="card-header pb-0">
           <div class="d-flex justify-content-between">
             <h6>Master Daerah</h6>
-            <a href="#" class="btn bg-gradient-primary btn-sm">
+            <button type="button" class="btn bg-gradient-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambahDaerahModal">
               <i class="fas fa-plus"></i> Tambah Daerah
-            </a>
+            </button>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Tambah Daerah -->
+  <div class="modal fade" id="tambahDaerahModal" tabindex="-1" aria-labelledby="tambahDaerahModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tambahDaerahModalLabel">Tambah Daerah Baru</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" action="{% url 'master_daerah' %}">
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="id_daerah" class="form-label">ID Daerah</label>
+              <input type="text" class="form-control" id="id_daerah" name="id_daerah" placeholder="ID akan dibuat otomatis" disabled>
+              <small class="text-muted">ID akan dibuat otomatis oleh sistem</small>
+            </div>
+            <div class="mb-3">
+              <label for="nama_daerah" class="form-label">Nama Daerah <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="nama_daerah" name="nama_daerah" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn bg-gradient-primary">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Hapus Daerah -->
+  <div class="modal fade" id="deleteDaerahModal" tabindex="-1" aria-labelledby="deleteDaerahModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteDaerahModalLabel">Konfirmasi Hapus</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" action="{% url 'master_daerah' %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="delete">
+          <input type="hidden" id="delete_id_daerah" name="id_daerah">
+          <div class="modal-body">
+            <p>Apakah Anda yakin ingin menghapus daerah: <strong><span id="delete_nama_daerah"></span></strong>?</p>
+            <p class="text-danger">Perhatian: Tindakan ini tidak dapat dibatalkan!</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-danger">Hapus</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -89,13 +144,16 @@
                   </td>
                   <td class="align-middle">
                     <div class="d-flex">
-                      <a href="#" class="btn btn-link text-dark px-3 mb-0" title="Lihat Detail">
-                        <i class="fas fa-eye text-dark me-2" aria-hidden="true"></i>Lihat
-                      </a>
-                      <a href="#" class="btn btn-link text-dark px-3 mb-0" title="Edit">
+                      <a href="#" class="btn btn-link text-dark px-3 mb-0 btn-edit" 
+                         data-bs-toggle="modal" data-bs-target="#editDaerahModal"
+                         data-id="{{ daerah.id_daerah }}" 
+                         data-nama="{{ daerah.nama_daerah }}" title="Edit">
                         <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit
                       </a>
-                      <a href="#" class="btn btn-link text-danger text-gradient px-3 mb-0" title="Hapus">
+                      <a href="#" class="btn btn-link text-danger text-gradient px-3 mb-0 btn-delete" 
+                        data-bs-toggle="modal" data-bs-target="#deleteDaerahModal"
+                        data-id="{{ daerah.id_daerah }}" 
+                        data-nama="{{ daerah.nama_daerah }}" title="Hapus">
                         <i class="far fa-trash-alt me-2"></i>Hapus
                       </a>
                     </div>
@@ -140,6 +198,35 @@ $(document).ready(function() {
         "columnDefs": [
             { "orderable": false, "targets": [0, 3] }
         ]
+    });
+    
+    // Event handler untuk tombol edit
+    $('.btn-edit').on('click', function() {
+        // Ambil data dari atribut data
+        var id = $(this).data('id');
+        var nama = $(this).data('nama');
+        
+        console.log("Edit button clicked - ID:", id, "Nama:", nama);
+        
+        // Pastikan data terisi dengan benar
+        setTimeout(function() {
+            $('#old_nama_daerah').val(nama);
+            $('#edit_nama_daerah').val(nama);
+        }, 300);
+        
+        // Isi form edit dengan data yang ada
+        $('#edit_id_daerah').val(id);
+    });
+    
+    // Event handler untuk tombol hapus
+    $('.btn-delete').on('click', function() {
+        // Ambil data dari atribut data
+        var id = $(this).data('id');
+        var nama = $(this).data('nama');
+        
+        // Isi form hapus dengan data yang ada
+        $('#delete_id_daerah').val(id);
+        $('#delete_nama_daerah').text(nama);
     });
 });
 </script>

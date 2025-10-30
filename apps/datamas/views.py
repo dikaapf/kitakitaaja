@@ -579,11 +579,54 @@ def get_kelompok_by_desa(request):
 @login_required
 def master_daerah(request):
     """View untuk mengelola master data daerah"""
+    # Handle form submission
+    if request.method == 'POST':
+        action = request.POST.get('action', 'add')
+        nama_daerah = request.POST.get('nama_daerah')
+        
+        if action == 'edit':
+            # Edit existing daerah
+            id_daerah = request.POST.get('id_daerah')
+            if id_daerah and nama_daerah:
+                try:
+                    daerah = Daerah.objects.get(id_daerah=id_daerah)
+                    daerah.nama_daerah = nama_daerah
+                    daerah.save()
+                    print(f"Daerah updated: {id_daerah} - {nama_daerah}")
+                except Exception as e:
+                    print(f"Error updating daerah: {e}")
+                return redirect('master_daerah')
+        elif action == 'delete':
+            # Delete existing daerah
+            id_daerah = request.POST.get('id_daerah')
+            if id_daerah:
+                try:
+                    daerah = Daerah.objects.get(id_daerah=id_daerah)
+                    nama = daerah.nama_daerah
+                    daerah.delete()
+                    print(f"Daerah deleted: {id_daerah} - {nama}")
+                except Exception as e:
+                    print(f"Error deleting daerah: {e}")
+                return redirect('master_daerah')
+        else:
+            # Add new daerah
+            if nama_daerah:
+                Daerah.objects.create(nama_daerah=nama_daerah)
+                return redirect('master_daerah')
+    
+    # Get search query
+    search_query = request.GET.get('search', '')
+    
+    # Filter daerah list
     daerah_list = Daerah.objects.all()
+    if search_query:
+        daerah_list = daerah_list.filter(nama_daerah__icontains=search_query)
+    
     context = {
         'parent': 'datamas',
         'segment': 'master_daerah',
         'daerah_list': daerah_list,
+        'search_query': search_query,
     }
     return render(request, 'datamas/master_daerah.html', context)
 
