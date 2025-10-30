@@ -115,6 +115,7 @@ urlpatterns = [
   
   # AJAX URLs untuk dynamic dropdown
   path('ajax/get-desa/', datamas_views.get_desa_by_daerah, name='get_desa_by_daerah'),
+  path('ajax/get-daerah/', datamas_views.get_daerah_by_desa, name='get_daerah_by_desa'),
   path('ajax/get-kelompok/', datamas_views.get_kelompok_by_desa, name='get_kelompok_by_desa'),
   
   # Master Data URLs

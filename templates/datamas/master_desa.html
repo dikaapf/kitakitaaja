@@ -68,6 +68,7 @@
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID Desa</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Desa</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Daerah</th>
                   <th class="text-secondary opacity-7">Aksi</th>
                 </tr>
               </thead>
@@ -88,8 +89,15 @@
                     </div>
                   </td>
                   <td class="align-middle">
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">{{ desa.id_daerah.nama_daerah }}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="align-middle">
                     <div class="d-flex">
-                      <a href="#" class="btn-edit text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editDesaModal" data-id="{{ desa.id_desa }}" data-nama="{{ desa.nama_desa }}" title="Edit">
+                      <a href="#" class="btn-edit text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editDesaModal" data-id="{{ desa.id_desa }}" data-nama="{{ desa.nama_desa }}" data-daerah="{{ desa.id_daerah.id_daerah }}" title="Edit">
                         <i class="fas fa-edit text-info me-2"></i>Edit
                       </a>
                       <a href="#" class="btn-delete text-secondary font-weight-bold text-xs ms-2" data-bs-toggle="modal" data-bs-target="#deleteDesaModal" data-id="{{ desa.id_desa }}" data-nama="{{ desa.nama_desa }}" title="Hapus">
@@ -138,6 +146,15 @@
               <label for="nama_desa" class="form-label">Nama Desa <span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="nama_desa" name="nama_desa" required>
             </div>
+            <div class="mb-3">
+              <label for="id_daerah" class="form-label">Daerah <span class="text-danger">*</span></label>
+              <select class="form-control" id="id_daerah" name="id_daerah" required>
+                <option value="">-- Pilih Daerah --</option>
+                {% for daerah in daerah_list %}
+                <option value="{{ daerah.id_daerah }}">{{ daerah.nama_daerah }}</option>
+                {% endfor %}
+              </select>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -168,6 +185,15 @@
             <div class="mb-3">
               <label for="edit_nama_desa" class="form-label">Nama Desa Baru <span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="edit_nama_desa" name="nama_desa" required>
+            </div>
+            <div class="mb-3">
+              <label for="edit_id_daerah" class="form-label">Daerah <span class="text-danger">*</span></label>
+              <select class="form-control" id="edit_id_daerah" name="id_daerah" required>
+                <option value="">-- Pilih Daerah --</option>
+                {% for daerah in daerah_list %}
+                <option value="{{ daerah.id_daerah }}">{{ daerah.nama_daerah }}</option>
+                {% endfor %}
+              </select>
             </div>
           </div>
           <div class="modal-footer">

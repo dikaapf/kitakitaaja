@@ -68,6 +68,8 @@
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID Kelompok</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Kelompok</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Desa</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Daerah</th>
                   <th class="text-secondary opacity-7">Aksi</th>
                 </tr>
               </thead>
@@ -88,8 +90,22 @@
                     </div>
                   </td>
                   <td class="align-middle">
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">{{ kelompok.id_desa.nama_desa }}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="align-middle">
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">{{ kelompok.id_desa.id_daerah.nama_daerah }}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="align-middle">
                     <div class="d-flex">
-                      <a href="#" class="btn-edit text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editKelompokModal" data-id="{{ kelompok.id_kel }}" data-nama="{{ kelompok.nama_kel }}" title="Edit">
+                      <a href="#" class="btn-edit text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editKelompokModal" data-id="{{ kelompok.id_kel }}" data-nama="{{ kelompok.nama_kel }}" data-desa="{{ kelompok.id_desa.id_desa }}" title="Edit">
                         <i class="fas fa-edit text-info me-2"></i>Edit
                       </a>
                       <a href="#" class="btn-delete text-secondary font-weight-bold text-xs ms-2" data-bs-toggle="modal" data-bs-target="#deleteKelompokModal" data-id="{{ kelompok.id_kel }}" data-nama="{{ kelompok.nama_kel }}" title="Hapus">
@@ -138,6 +154,24 @@
               <label for="nama_kelompok" class="form-label">Nama Kelompok <span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="nama_kelompok" name="nama_kelompok" required>
             </div>
+            <div class="mb-3">
+              <label for="id_daerah" class="form-label">Daerah <span class="text-danger">*</span></label>
+              <select class="form-control" id="id_daerah" name="id_daerah" required>
+                <option value="">-- Pilih Daerah --</option>
+                {% for daerah in daerah_list %}
+                <option value="{{ daerah.id_daerah }}">{{ daerah.nama_daerah }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="id_desa" class="form-label">Desa <span class="text-danger">*</span></label>
+              <select class="form-control" id="id_desa" name="id_desa" required>
+                <option value="">-- Pilih Desa --</option>
+                {% for desa in desa_list %}
+                <option value="{{ desa.id_desa }}">{{ desa.nama_desa }}</option>
+                {% endfor %}
+              </select>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -168,6 +202,24 @@
             <div class="mb-3">
               <label for="edit_nama_kelompok" class="form-label">Nama Kelompok Baru <span class="text-danger">*</span></label>
               <input type="text" class="form-control" id="edit_nama_kelompok" name="nama_kelompok" required>
+            </div>
+            <div class="mb-3">
+              <label for="edit_id_daerah" class="form-label">Daerah <span class="text-danger">*</span></label>
+              <select class="form-control" id="edit_id_daerah" name="id_daerah" required>
+                <option value="">-- Pilih Daerah --</option>
+                {% for daerah in daerah_list %}
+                <option value="{{ daerah.id_daerah }}">{{ daerah.nama_daerah }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="edit_id_desa" class="form-label">Desa <span class="text-danger">*</span></label>
+              <select class="form-control" id="edit_id_desa" name="id_desa" required>
+                <option value="">-- Pilih Desa --</option>
+                {% for desa in desa_list %}
+                <option value="{{ desa.id_desa }}">{{ desa.nama_desa }}</option>
+                {% endfor %}
+              </select>
             </div>
           </div>
           <div class="modal-footer">
@@ -230,16 +282,31 @@ $(document).ready(function() {
     $('.btn-edit').on('click', function() {
       var id = $(this).data('id');
       var nama = $(this).data('nama');
+      var desa = $(this).data('desa');
       
       $('#edit_id_kelompok').val(id);
       $('#old_nama_kelompok').val(nama);
       $('#edit_nama_kelompok').val(nama);
+      $('#edit_id_desa').val(desa);
       
-      // Delay to ensure modal is fully opened before setting values
-      setTimeout(function() {
-        $('#old_nama_kelompok').val(nama);
-        $('#edit_nama_kelompok').val(nama);
-      }, 500);
+      // Mendapatkan id_daerah dari desa yang dipilih
+      var desaOption = $('#edit_id_desa option:selected');
+      if (desaOption.length) {
+        var desaId = desaOption.val();
+        // Cari daerah dari desa yang dipilih
+        $.ajax({
+          url: '{% url "get_daerah_by_desa" %}',
+          data: {
+            'desa_id': desaId
+          },
+          dataType: 'json',
+          success: function(data) {
+            if (data.daerah_id) {
+              $('#edit_id_daerah').val(data.daerah_id);
+            }
+          }
+        });
+      }
     });
     
     // Delete button handler
@@ -249,6 +316,54 @@ $(document).ready(function() {
       
       $('#delete_id_kelompok').val(id);
       $('#delete_nama_kelompok').text(nama);
+    });
+    
+    // Dynamic dropdown for Desa based on Daerah (Form Tambah)
+    $('#id_daerah').on('change', function() {
+      var daerahId = $(this).val();
+      var desaSelect = $('#id_desa');
+      
+      // Clear desa
+      desaSelect.empty().append('<option value="">-- Pilih Desa --</option>');
+      
+      if (daerahId) {
+        $.ajax({
+          url: '{% url "get_desa_by_daerah" %}',
+          data: {
+            'daerah_id': daerahId
+          },
+          dataType: 'json',
+          success: function(data) {
+            $.each(data.desa_list, function(index, desa) {
+              desaSelect.append('<option value="' + desa.id + '">' + desa.name + '</option>');
+            });
+          }
+        });
+      }
+    });
+    
+    // Dynamic dropdown for Desa based on Daerah (Form Edit)
+    $('#edit_id_daerah').on('change', function() {
+      var daerahId = $(this).val();
+      var desaSelect = $('#edit_id_desa');
+      
+      // Clear desa
+      desaSelect.empty().append('<option value="">-- Pilih Desa --</option>');
+      
+      if (daerahId) {
+        $.ajax({
+          url: '{% url "get_desa_by_daerah" %}',
+          data: {
+            'daerah_id': daerahId
+          },
+          dataType: 'json',
+          success: function(data) {
+            $.each(data.desa_list, function(index, desa) {
+              desaSelect.append('<option value="' + desa.id + '">' + desa.name + '</option>');
+            });
+          }
+        });
+      }
     });
 });
 </script>

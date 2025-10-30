@@ -562,6 +562,21 @@ def get_desa_by_daerah(request):
     return JsonResponse({'desa_list': desa_list})
 
 
+def get_daerah_by_desa(request):
+    """AJAX view untuk mendapatkan daerah berdasarkan desa"""
+    desa_id = request.GET.get('desa_id')
+    daerah_id = None
+    
+    if desa_id:
+        try:
+            desa = Desa.objects.get(id_desa=desa_id)
+            daerah_id = desa.id_daerah.id_daerah if desa.id_daerah else None
+        except Desa.DoesNotExist:
+            pass
+    
+    return JsonResponse({'daerah_id': daerah_id})
+
+
 def get_kelompok_by_desa(request):
     """AJAX view untuk mendapatkan kelompok berdasarkan desa"""
     desa_id = request.GET.get('desa_id')
@@ -639,22 +654,31 @@ def master_desa(request):
         
         if action == 'add':
             nama_desa = request.POST.get('nama_desa')
+            id_daerah = request.POST.get('id_daerah')
             try:
-                Desa.objects.create(nama_desa=nama_desa)
+                daerah = Daerah.objects.get(id_daerah=id_daerah)
+                Desa.objects.create(nama_desa=nama_desa, id_daerah=daerah)
                 messages.success(request, f'Desa {nama_desa} berhasil ditambahkan')
+            except Daerah.DoesNotExist:
+                messages.error(request, 'Daerah tidak ditemukan')
             except Exception as e:
                 messages.error(request, f'Gagal menambahkan desa: {str(e)}')
                 
         elif action == 'edit':
             id_desa = request.POST.get('id_desa')
             nama_desa = request.POST.get('nama_desa')
+            id_daerah = request.POST.get('id_daerah')
             try:
                 desa = Desa.objects.get(id_desa=id_desa)
+                daerah = Daerah.objects.get(id_daerah=id_daerah)
                 desa.nama_desa = nama_desa
+                desa.id_daerah = daerah
                 desa.save()
                 messages.success(request, f'Desa berhasil diperbarui menjadi {nama_desa}')
             except Desa.DoesNotExist:
                 messages.error(request, 'Desa tidak ditemukan')
+            except Daerah.DoesNotExist:
+                messages.error(request, 'Daerah tidak ditemukan')
             except Exception as e:
                 messages.error(request, f'Gagal memperbarui desa: {str(e)}')
                 
@@ -676,11 +700,15 @@ def master_desa(request):
         desa_list = Desa.objects.filter(nama_desa__icontains=search_query)
     else:
         desa_list = Desa.objects.all()
+    
+    # Ambil daftar daerah untuk dropdown
+    daerah_list = Daerah.objects.all()
         
     context = {
         'parent': 'datamas',
         'segment': 'master_desa',
         'desa_list': desa_list,
+        'daerah_list': daerah_list,
         'search_query': search_query,
     }
     return render(request, 'datamas/master_desa.html', context)
@@ -738,10 +766,17 @@ def master_kelompok(request):
                 from django.contrib import messages as django_messages
                 django_messages.error(request, f"Gagal menghapus kelompok: {str(e)}")
     
+    # Ambil data daerah untuk dropdown
+    daerah_list = Daerah.objects.all()
+    # Ambil data desa untuk dropdown
+    desa_list = Desa.objects.all()
+    
     context = {
         'parent': 'datamas',
         'segment': 'master_kelompok',
         'kelompok_list': kelompok_list,
         'search_query': search_query,
+        'daerah_list': daerah_list,
+        'desa_list': desa_list,
     }
     return render(request, 'datamas/master_kelompok.html', context)

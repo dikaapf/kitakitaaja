@@ -19,14 +19,16 @@ class Daerah(models.Model):
     
 class Desa(models.Model):
     id_desa    = models.AutoField(primary_key=True)
-    nama_desa  = models.CharField(max_length = 100) 
+    nama_desa  = models.CharField(max_length = 100)
+    id_daerah  = models.ForeignKey(Daerah, on_delete=models.CASCADE, related_name='desa_set', null=True)
 
     def __str__(self):
         return self.nama_desa
     
 class Kelompok(models.Model):
     id_kel    = models.AutoField(primary_key=True)
-    nama_kel  = models.CharField(max_length = 100) 
+    nama_kel  = models.CharField(max_length = 100)
+    id_desa   = models.ForeignKey(Desa, on_delete=models.CASCADE, related_name='kelompok_set', null=True)
 
     def __str__(self):
         return self.nama_kel
