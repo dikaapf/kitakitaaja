@@ -1,0 +1,146 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %} Master Kelompok {% endblock title %}
+
+{% block stylesheets %}
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css">
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+  
+  <!-- Header with Action Buttons -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <div class="d-flex justify-content-between">
+            <h6>Master Kelompok</h6>
+            <a href="#" class="btn bg-gradient-primary btn-sm">
+              <i class="fas fa-plus"></i> Tambah Kelompok
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Section -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-body">
+          <form method="GET" class="row g-3">
+            <div class="col-md-6">
+              <label for="search" class="form-label">Pencarian</label>
+              <input type="text" class="form-control" id="search" name="search" 
+                     value="{{ search_query }}" placeholder="Cari nama kelompok...">
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+              <button type="submit" class="btn bg-gradient-info btn-sm me-2">
+                <i class="fas fa-search"></i> Cari
+              </button>
+              <a href="{% url 'master_kelompok' %}" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-redo"></i> Reset
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Daftar Kelompok ({{ kelompok_list.count }} data)</h6>
+        </div>
+        <div class="card-body px-0 pt-0 pb-2">
+          <div class="table-responsive p-0">
+            <table class="table align-items-center mb-0" id="kelompok-table">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID Kelompok</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Kelompok</th>
+                  <th class="text-secondary opacity-7">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for kelompok in kelompok_list %}
+                <tr>
+                  <td class="align-middle text-center text-sm">
+                    <span class="text-xs font-weight-bold">{{ forloop.counter }}</span>
+                  </td>
+                  <td class="align-middle text-sm">
+                    <span class="text-xs font-weight-bold">{{ kelompok.id_kel }}</span>
+                  </td>
+                  <td class="align-middle">
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">{{ kelompok.nama_kel }}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="align-middle">
+                    <div class="d-flex">
+                      <a href="#" class="btn btn-link text-dark px-3 mb-0" title="Lihat Detail">
+                        <i class="fas fa-eye text-dark me-2" aria-hidden="true"></i>Lihat
+                      </a>
+                      <a href="#" class="btn btn-link text-dark px-3 mb-0" title="Edit">
+                        <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit
+                      </a>
+                      <a href="#" class="btn btn-link text-danger text-gradient px-3 mb-0" title="Hapus">
+                        <i class="far fa-trash-alt me-2"></i>Hapus
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="4" class="text-center py-4">
+                    <div class="text-center">
+                      <i class="fas fa-inbox fa-3x text-secondary mb-3"></i>
+                      <h6 class="text-secondary">Tidak ada data kelompok</h6>
+                      <p class="text-xs text-secondary mb-0">Silakan tambah data kelompok baru</p>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#kelompok-table').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/id.json"
+        },
+        "pageLength": 25,
+        "order": [[ 1, "asc" ]],
+        "columnDefs": [
+            { "orderable": false, "targets": [0, 3] }
+        ]
+    });
+});
+</script>
+{% endblock javascripts %}
