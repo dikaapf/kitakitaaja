@@ -5,7 +5,7 @@ from django.contrib.auth import logout
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import DataKependudukan, Daerah, Desa, Kelompok
 from django import forms
@@ -637,10 +637,16 @@ def master_daerah(request):
     if search_query:
         daerah_list = daerah_list.filter(nama_daerah__icontains=search_query)
     
+    # Pagination
+    paginator = Paginator(daerah_list, 10)  # Show 10 daerah per page
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+    
     context = {
         'parent': 'datamas',
         'segment': 'master_daerah',
-        'daerah_list': daerah_list,
+        'daerah_list': page_obj,
+        'page_obj': page_obj,
         'search_query': search_query,
     }
     return render(request, 'datamas/master_daerah.html', context)
@@ -701,13 +707,19 @@ def master_desa(request):
     else:
         desa_list = Desa.objects.all()
     
+    # Pagination
+    paginator = Paginator(desa_list, 10)  # Show 10 desa per page
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+    
     # Ambil daftar daerah untuk dropdown
     daerah_list = Daerah.objects.all()
         
     context = {
         'parent': 'datamas',
         'segment': 'master_desa',
-        'desa_list': desa_list,
+        'desa_list': page_obj,
+        'page_obj': page_obj,
         'daerah_list': daerah_list,
         'search_query': search_query,
     }
@@ -723,6 +735,11 @@ def master_kelompok(request):
         kelompok_list = Kelompok.objects.filter(nama_kel__icontains=search_query)
     else:
         kelompok_list = Kelompok.objects.all()
+        
+    # Pagination
+    paginator = Paginator(kelompok_list, 10)  # Show 10 kelompok per page
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
         
     # Handle POST requests for add, edit, delete
     if request.method == 'POST':
@@ -769,7 +786,8 @@ def master_kelompok(request):
     context = {
         'parent': 'datamas',
         'segment': 'master_kelompok',
-        'kelompok_list': kelompok_list,
+        'kelompok_list': page_obj,
+        'page_obj': page_obj,
         'search_query': search_query,
         'daerah_list': daerah_list,
         'desa_list': desa_list,
