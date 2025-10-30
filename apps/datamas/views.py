@@ -634,11 +634,54 @@ def master_daerah(request):
 @login_required
 def master_desa(request):
     """View untuk mengelola master data desa"""
-    desa_list = Desa.objects.all()
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        if action == 'add':
+            nama_desa = request.POST.get('nama_desa')
+            try:
+                Desa.objects.create(nama_desa=nama_desa)
+                messages.success(request, f'Desa {nama_desa} berhasil ditambahkan')
+            except Exception as e:
+                messages.error(request, f'Gagal menambahkan desa: {str(e)}')
+                
+        elif action == 'edit':
+            id_desa = request.POST.get('id_desa')
+            nama_desa = request.POST.get('nama_desa')
+            try:
+                desa = Desa.objects.get(id_desa=id_desa)
+                desa.nama_desa = nama_desa
+                desa.save()
+                messages.success(request, f'Desa berhasil diperbarui menjadi {nama_desa}')
+            except Desa.DoesNotExist:
+                messages.error(request, 'Desa tidak ditemukan')
+            except Exception as e:
+                messages.error(request, f'Gagal memperbarui desa: {str(e)}')
+                
+        elif action == 'delete':
+            id_desa = request.POST.get('id_desa')
+            try:
+                desa = Desa.objects.get(id_desa=id_desa)
+                nama = desa.nama_desa
+                desa.delete()
+                messages.success(request, f'Desa {nama} berhasil dihapus')
+            except Desa.DoesNotExist:
+                messages.error(request, 'Desa tidak ditemukan')
+            except Exception as e:
+                messages.error(request, f'Gagal menghapus desa: {str(e)}')
+    
+    # Filter berdasarkan pencarian jika ada
+    search_query = request.GET.get('search', '')
+    if search_query:
+        desa_list = Desa.objects.filter(nama_desa__icontains=search_query)
+    else:
+        desa_list = Desa.objects.all()
+        
     context = {
         'parent': 'datamas',
         'segment': 'master_desa',
         'desa_list': desa_list,
+        'search_query': search_query,
     }
     return render(request, 'datamas/master_desa.html', context)
 
@@ -646,10 +689,59 @@ def master_desa(request):
 @login_required
 def master_kelompok(request):
     """View untuk mengelola master data kelompok"""
-    kelompok_list = Kelompok.objects.all()
+    # Filter berdasarkan pencarian jika ada
+    search_query = request.GET.get('search', '')
+    if search_query:
+        kelompok_list = Kelompok.objects.filter(nama_kel__icontains=search_query)
+    else:
+        kelompok_list = Kelompok.objects.all()
+        
+    # Handle POST requests for add, edit, delete
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        if action == 'add':
+            nama_kelompok = request.POST.get('nama_kelompok')
+            try:
+                Kelompok.objects.create(nama_kel=nama_kelompok)
+                messages.success(request, f"Kelompok '{nama_kelompok}' berhasil ditambahkan.")
+            except Exception as e:
+                from django.contrib import messages as django_messages
+                django_messages.error(request, f"Gagal menambahkan kelompok: {str(e)}")
+                
+        elif action == 'edit':
+            id_kelompok = request.POST.get('id_kelompok')
+            nama_kelompok = request.POST.get('nama_kelompok')
+            try:
+                kelompok = Kelompok.objects.get(id_kel=id_kelompok)
+                kelompok.nama_kel = nama_kelompok
+                kelompok.save()
+                messages.success(request, f"Kelompok berhasil diperbarui menjadi '{nama_kelompok}'.")
+            except Kelompok.DoesNotExist:
+                from django.contrib import messages as django_messages
+                django_messages.error(request, "Kelompok tidak ditemukan.")
+            except Exception as e:
+                from django.contrib import messages as django_messages
+                django_messages.error(request, f"Gagal memperbarui kelompok: {str(e)}")
+                
+        elif action == 'delete':
+            id_kelompok = request.POST.get('id_kelompok')
+            try:
+                kelompok = Kelompok.objects.get(id_kel=id_kelompok)
+                nama = kelompok.nama_kel
+                kelompok.delete()
+                messages.success(request, f"Kelompok '{nama}' berhasil dihapus.")
+            except Kelompok.DoesNotExist:
+                from django.contrib import messages as django_messages
+                django_messages.error(request, "Kelompok tidak ditemukan.")
+            except Exception as e:
+                from django.contrib import messages as django_messages
+                django_messages.error(request, f"Gagal menghapus kelompok: {str(e)}")
+    
     context = {
         'parent': 'datamas',
         'segment': 'master_kelompok',
         'kelompok_list': kelompok_list,
+        'search_query': search_query,
     }
     return render(request, 'datamas/master_kelompok.html', context)

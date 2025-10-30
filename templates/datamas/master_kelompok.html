@@ -19,9 +19,9 @@
         <div class="card-header pb-0">
           <div class="d-flex justify-content-between">
             <h6>Master Kelompok</h6>
-            <a href="#" class="btn bg-gradient-primary btn-sm">
+            <button type="button" class="btn bg-gradient-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambahKelompokModal">
               <i class="fas fa-plus"></i> Tambah Kelompok
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -89,14 +89,11 @@
                   </td>
                   <td class="align-middle">
                     <div class="d-flex">
-                      <a href="#" class="btn btn-link text-dark px-3 mb-0" title="Lihat Detail">
-                        <i class="fas fa-eye text-dark me-2" aria-hidden="true"></i>Lihat
+                      <a href="#" class="btn-edit text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editKelompokModal" data-id="{{ kelompok.id_kel }}" data-nama="{{ kelompok.nama_kel }}" title="Edit">
+                        <i class="fas fa-edit text-info me-2"></i>Edit
                       </a>
-                      <a href="#" class="btn btn-link text-dark px-3 mb-0" title="Edit">
-                        <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit
-                      </a>
-                      <a href="#" class="btn btn-link text-danger text-gradient px-3 mb-0" title="Hapus">
-                        <i class="far fa-trash-alt me-2"></i>Hapus
+                      <a href="#" class="btn-delete text-secondary font-weight-bold text-xs ms-2" data-bs-toggle="modal" data-bs-target="#deleteKelompokModal" data-id="{{ kelompok.id_kel }}" data-nama="{{ kelompok.nama_kel }}" title="Hapus">
+                        <i class="fas fa-trash text-danger me-2"></i>Hapus
                       </a>
                     </div>
                   </td>
@@ -116,6 +113,93 @@
             </table>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Tambah Kelompok -->
+  <div class="modal fade" id="tambahKelompokModal" tabindex="-1" aria-labelledby="tambahKelompokModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tambahKelompokModalLabel">Tambah Kelompok Baru</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" action="{% url 'master_kelompok' %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="add">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="id_kelompok" class="form-label">ID Kelompok</label>
+              <input type="text" class="form-control" id="id_kelompok" name="id_kelompok" placeholder="ID akan dibuat otomatis" disabled>
+              <small class="text-muted">ID akan dibuat otomatis oleh sistem</small>
+            </div>
+            <div class="mb-3">
+              <label for="nama_kelompok" class="form-label">Nama Kelompok <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="nama_kelompok" name="nama_kelompok" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn bg-gradient-primary">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Edit Kelompok -->
+  <div class="modal fade" id="editKelompokModal" tabindex="-1" aria-labelledby="editKelompokModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editKelompokModalLabel">Edit Kelompok</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" action="{% url 'master_kelompok' %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="edit">
+          <input type="hidden" id="edit_id_kelompok" name="id_kelompok">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="old_nama_kelompok" class="form-label">Nama Kelompok Lama</label>
+              <input type="text" class="form-control bg-light text-muted" id="old_nama_kelompok" readonly style="background-color: #f8f9fa !important;">
+            </div>
+            <div class="mb-3">
+              <label for="edit_nama_kelompok" class="form-label">Nama Kelompok Baru <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="edit_nama_kelompok" name="nama_kelompok" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn bg-gradient-primary">Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Hapus Kelompok -->
+  <div class="modal fade" id="deleteKelompokModal" tabindex="-1" aria-labelledby="deleteKelompokModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteKelompokModalLabel">Konfirmasi Hapus</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" action="{% url 'master_kelompok' %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="delete">
+          <input type="hidden" id="delete_id_kelompok" name="id_kelompok">
+          <div class="modal-body">
+            <p>Apakah Anda yakin ingin menghapus kelompok: <strong><span id="delete_nama_kelompok"></span></strong>?</p>
+            <p class="text-danger">Perhatian: Tindakan ini tidak dapat dibatalkan!</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-danger">Hapus</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -140,6 +224,31 @@ $(document).ready(function() {
         "columnDefs": [
             { "orderable": false, "targets": [0, 3] }
         ]
+    });
+    
+    // Edit button handler
+    $('.btn-edit').on('click', function() {
+      var id = $(this).data('id');
+      var nama = $(this).data('nama');
+      
+      $('#edit_id_kelompok').val(id);
+      $('#old_nama_kelompok').val(nama);
+      $('#edit_nama_kelompok').val(nama);
+      
+      // Delay to ensure modal is fully opened before setting values
+      setTimeout(function() {
+        $('#old_nama_kelompok').val(nama);
+        $('#edit_nama_kelompok').val(nama);
+      }, 500);
+    });
+    
+    // Delete button handler
+    $('.btn-delete').on('click', function() {
+      var id = $(this).data('id');
+      var nama = $(this).data('nama');
+      
+      $('#delete_id_kelompok').val(id);
+      $('#delete_nama_kelompok').text(nama);
     });
 });
 </script>

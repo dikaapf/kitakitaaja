@@ -19,9 +19,9 @@
         <div class="card-header pb-0">
           <div class="d-flex justify-content-between">
             <h6>Master Desa</h6>
-            <a href="#" class="btn bg-gradient-primary btn-sm">
+            <button type="button" class="btn bg-gradient-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambahDesaModal">
               <i class="fas fa-plus"></i> Tambah Desa
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -89,14 +89,11 @@
                   </td>
                   <td class="align-middle">
                     <div class="d-flex">
-                      <a href="#" class="btn btn-link text-dark px-3 mb-0" title="Lihat Detail">
-                        <i class="fas fa-eye text-dark me-2" aria-hidden="true"></i>Lihat
+                      <a href="#" class="btn-edit text-secondary font-weight-bold text-xs" data-bs-toggle="modal" data-bs-target="#editDesaModal" data-id="{{ desa.id_desa }}" data-nama="{{ desa.nama_desa }}" title="Edit">
+                        <i class="fas fa-edit text-info me-2"></i>Edit
                       </a>
-                      <a href="#" class="btn btn-link text-dark px-3 mb-0" title="Edit">
-                        <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit
-                      </a>
-                      <a href="#" class="btn btn-link text-danger text-gradient px-3 mb-0" title="Hapus">
-                        <i class="far fa-trash-alt me-2"></i>Hapus
+                      <a href="#" class="btn-delete text-secondary font-weight-bold text-xs ms-2" data-bs-toggle="modal" data-bs-target="#deleteDesaModal" data-id="{{ desa.id_desa }}" data-nama="{{ desa.nama_desa }}" title="Hapus">
+                        <i class="fas fa-trash text-danger me-2"></i>Hapus
                       </a>
                     </div>
                   </td>
@@ -116,6 +113,93 @@
             </table>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Tambah Desa -->
+  <div class="modal fade" id="tambahDesaModal" tabindex="-1" aria-labelledby="tambahDesaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tambahDesaModalLabel">Tambah Desa Baru</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" action="{% url 'master_desa' %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="add">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="id_desa" class="form-label">ID Desa</label>
+              <input type="text" class="form-control" id="id_desa" name="id_desa" placeholder="ID akan dibuat otomatis" disabled>
+              <small class="text-muted">ID akan dibuat otomatis oleh sistem</small>
+            </div>
+            <div class="mb-3">
+              <label for="nama_desa" class="form-label">Nama Desa <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="nama_desa" name="nama_desa" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn bg-gradient-primary">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Edit Desa -->
+  <div class="modal fade" id="editDesaModal" tabindex="-1" aria-labelledby="editDesaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editDesaModalLabel">Edit Desa</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" action="{% url 'master_desa' %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="edit">
+          <input type="hidden" id="edit_id_desa" name="id_desa">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="old_nama_desa" class="form-label">Nama Desa Lama</label>
+              <input type="text" class="form-control bg-light text-muted" id="old_nama_desa" readonly style="background-color: #f8f9fa !important;">
+            </div>
+            <div class="mb-3">
+              <label for="edit_nama_desa" class="form-label">Nama Desa Baru <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="edit_nama_desa" name="nama_desa" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn bg-gradient-primary">Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Hapus Desa -->
+  <div class="modal fade" id="deleteDesaModal" tabindex="-1" aria-labelledby="deleteDesaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteDesaModalLabel">Konfirmasi Hapus</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" action="{% url 'master_desa' %}">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="delete">
+          <input type="hidden" id="delete_id_desa" name="id_desa">
+          <div class="modal-body">
+            <p>Apakah Anda yakin ingin menghapus desa: <strong><span id="delete_nama_desa"></span></strong>?</p>
+            <p class="text-danger">Perhatian: Tindakan ini tidak dapat dibatalkan!</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-danger">Hapus</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -140,6 +224,31 @@ $(document).ready(function() {
         "columnDefs": [
             { "orderable": false, "targets": [0, 3] }
         ]
+    });
+    
+    // Edit button handler
+    $('.btn-edit').on('click', function() {
+      var id = $(this).data('id');
+      var nama = $(this).data('nama');
+      
+      $('#edit_id_desa').val(id);
+      $('#old_nama_desa').val(nama);
+      $('#edit_nama_desa').val(nama);
+      
+      // Delay to ensure modal is fully opened before setting values
+      setTimeout(function() {
+        $('#old_nama_desa').val(nama);
+        $('#edit_nama_desa').val(nama);
+      }, 500);
+    });
+    
+    // Delete button handler
+    $('.btn-delete').on('click', function() {
+      var id = $(this).data('id');
+      var nama = $(this).data('nama');
+      
+      $('#delete_id_desa').val(id);
+      $('#delete_nama_desa').text(nama);
     });
 });
 </script>
