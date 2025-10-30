@@ -102,16 +102,24 @@
                   <span class="sidenav-normal"> Tambah Data </span>
                 </a>
               </li>
-              {% if request.user.is_superuser %}
-              <li class="nav-item mt-2">
-                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Master Data</h6>
-              </li>
+            </ul>
+          </div>
+        </li>  
+        {% if request.user.is_superuser %}
+        <li class="nav-item">
+          <a data-bs-toggle="collapse" href="#database-dropdown" class="nav-link {% if 'database' in parent or 'master_daerah' in segment or 'master_desa' in segment or 'master_kelompok' in segment %}active{% endif %}" aria-controls="database-dropdown" role="button" aria-expanded="false">
+            <div class="icon icon-sm shadow-sm border-radius-md bg-white text-center d-flex align-items-center justify-content-center  me-2">
+              <i class="ni ni-circle-08" aria-hidden="true"></i>
+            </div>
+            <span class="nav-link-text ms-1">Database</span>
+          </a>
+          <div class="collapse {% if 'database' in parent or 'master_daerah' in segment or 'master_desa' in segment or 'master_kelompok' in segment %}show{% endif %} " id="database-dropdown">
+            <ul class="nav ms-4 ps-3">
               <li class="nav-item {% if 'master_daerah' in segment %}active{% endif %}">
                 <a class="nav-link {% if 'master_daerah' in segment %}active{% endif %}" href="{% url 'master_daerah' %}">
                   <span class="sidenav-mini-icon"> DR </span>
                   <span class="sidenav-normal"> Master Daerah </span>
                 </a>
-              </li>
               <li class="nav-item {% if 'master_desa' in segment %}active{% endif %}">
                 <a class="nav-link {% if 'master_desa' in segment %}active{% endif %}" href="{% url 'master_desa' %}">
                   <span class="sidenav-mini-icon"> DS </span>
@@ -122,20 +130,18 @@
                 <a class="nav-link {% if 'master_kelompok' in segment %}active{% endif %}" href="{% url 'master_kelompok' %}">
                   <span class="sidenav-mini-icon"> KL </span>
                   <span class="sidenav-normal"> Master Kelompok </span>
-                </a>
-              </li>
-              {% endif %}
+                </a>     
             </ul>
           </div>
-        </li>  
-
+        </li>
+        {% endif %}
         <li class="nav-item">
           <hr class="horizontal dark" />
           <h6 class="ps-4  ms-2 text-uppercase text-xs font-weight-bolder opacity-6">DOCS</h6>
         </li>
 
         {% if not request.user.is_authenticated %}
-        
+
         <li class="nav-item mt-3">
           <h6 class="ps-4  ms-2 text-uppercase text-xs font-weight-bolder opacity-6">WILAYAH</h6>
         </li>

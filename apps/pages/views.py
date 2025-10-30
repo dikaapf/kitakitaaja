@@ -7,9 +7,22 @@ from django.contrib.auth.decorators import login_required
 
 # Dashboard
 def default(request):
+  # Import model untuk menghitung jumlah record
+  from apps.datamas.models import Daerah, Desa, Kelompok, DataKependudukan
+  
+  # Hitung jumlah record untuk setiap model
+  jumlah_data_master = DataKependudukan.objects.count()
+  jumlah_daerah = Daerah.objects.count()
+  jumlah_desa = Desa.objects.count()
+  jumlah_kelompok = Kelompok.objects.count()
+  
   context = {
     'parent': 'dashboard',
-    'segment': 'default'
+    'segment': 'default',
+    'jumlah_data_master': jumlah_data_master,
+    'jumlah_daerah': jumlah_daerah,
+    'jumlah_desa': jumlah_desa,
+    'jumlah_kelompok': jumlah_kelompok
   }
   return render(request, 'pages/dashboards/default.html', context)
 

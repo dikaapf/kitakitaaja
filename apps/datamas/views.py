@@ -734,8 +734,7 @@ def master_kelompok(request):
                 Kelompok.objects.create(nama_kel=nama_kelompok)
                 messages.success(request, f"Kelompok '{nama_kelompok}' berhasil ditambahkan.")
             except Exception as e:
-                from django.contrib import messages as django_messages
-                django_messages.error(request, f"Gagal menambahkan kelompok: {str(e)}")
+                messages.error(request, f"Gagal menambahkan kelompok: {str(e)}")
                 
         elif action == 'edit':
             id_kelompok = request.POST.get('id_kelompok')
@@ -746,11 +745,9 @@ def master_kelompok(request):
                 kelompok.save()
                 messages.success(request, f"Kelompok berhasil diperbarui menjadi '{nama_kelompok}'.")
             except Kelompok.DoesNotExist:
-                from django.contrib import messages as django_messages
-                django_messages.error(request, "Kelompok tidak ditemukan.")
+                messages.error(request, "Kelompok tidak ditemukan.")
             except Exception as e:
-                from django.contrib import messages as django_messages
-                django_messages.error(request, f"Gagal memperbarui kelompok: {str(e)}")
+                messages.error(request, f"Gagal memperbarui kelompok: {str(e)}")
                 
         elif action == 'delete':
             id_kelompok = request.POST.get('id_kelompok')
@@ -760,11 +757,9 @@ def master_kelompok(request):
                 kelompok.delete()
                 messages.success(request, f"Kelompok '{nama}' berhasil dihapus.")
             except Kelompok.DoesNotExist:
-                from django.contrib import messages as django_messages
-                django_messages.error(request, "Kelompok tidak ditemukan.")
+                messages.error(request, "Kelompok tidak ditemukan.")
             except Exception as e:
-                from django.contrib import messages as django_messages
-                django_messages.error(request, f"Gagal menghapus kelompok: {str(e)}")
+                messages.error(request, f"Gagal menghapus kelompok: {str(e)}")
     
     # Ambil data daerah untuk dropdown
     daerah_list = Daerah.objects.all()
